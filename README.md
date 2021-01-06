@@ -1,0 +1,7 @@
+# Takenoko
+
+### Dependencies:
+* Pygame
+
+
+
