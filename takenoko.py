@@ -1,5 +1,8 @@
-import pygame
-#import random
+try:
+    import pygame
+    import random
+except ImportError:
+    raise ImportError("Couldn't load module")
 
 #My imports
 import config as c

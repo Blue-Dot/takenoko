@@ -63,6 +63,9 @@ class Plot(Tile):
         for i in range(self.bamboo_amount):
             #Put the bamboo in the correct place on the surface:
             self.bamboo_surface.blit(self.bamboo_image, (0, self.bamboo_surface.get_height() - ((i + 1) * c.bamboo_height)))
+
+        self.bamboo_surface.set_colorkey((0, 0, 0, 0)) # Makes sure that the transparent pixels aren't blit (there was a hole in the tiles otherwise)
+
         self.small_surface.blit(self.bamboo_surface, (c.bamboo_location_x, c.bamboo_location_y))
 
         surface.blit(self.small_surface, self.generate_coords(size, center))
