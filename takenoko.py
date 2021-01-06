@@ -1,8 +1,5 @@
-try:
-    import pygame
-    import random
-except ImportError:
-    raise ImportError("Couldn't load module")
+import pygame
+import random
 
 #My imports
 import config as c
@@ -47,6 +44,7 @@ class Game:
         self.quit_button = None
         self.eat_button = None
         self.grow_button = None
+        self.next_turn_button = None
 
         self.board = None
 
@@ -155,4 +153,6 @@ class Game:
             self.clock.tick(self.frame_rate)
         pygame.quit()
 
-Game(c.width, c.height).run()
+Main_Game = Game(c.width, c.height)
+
+Main_Game.run()
