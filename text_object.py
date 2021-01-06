@@ -12,3 +12,6 @@ class TextObject(pygame.sprite.Sprite):
     def draw(self, surface):
         text_surface = self.font.render(self.text, True, self.colour)
         surface.blit(text_surface, self.coords)
+    
+    def new_text(self, text):
+        self.text = text

@@ -81,7 +81,6 @@ class Plot(Tile):
         #Grow bamboo on all adjacent irrigated blots
 
     def remove_bamboo(self, amount):
-        print('i tried to remove bamboo')
         if self.bamboo_amount - amount >= 0:
             self.bamboo_amount -= amount
             return self.bamboo_amount

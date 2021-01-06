@@ -93,6 +93,9 @@ class Game:
         self.grow_button = Button('grow', 20, 65 + 50, 50, 30, self.b_grow)
         self.grow_button.add(self.objects)
 
+        self.next_turn_button = Button('next turn', 20, 165, 70, 30, self.next_turn)
+        self.next_turn_button.add(self.objects)
+
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, (c.width / 2, c.height / 2))
         self.board.place(Pond(0, 0))
@@ -118,7 +121,7 @@ class Game:
         self.current_player_number = (self.current_player_number + 1) % (c.number_of_players) #Increase current_player_number by 1, but cycle it through the total number of players
         self.current_player = self.players[self.current_player_number]
 
-        self.player_label.text = 'Player: %s' %str(self.current_player_number + 1)
+        self.player_label.new_text('Player: %s' % str(self.current_player_number + 1))
 
     def run(self):
         #For testing purposes (a sample map):
