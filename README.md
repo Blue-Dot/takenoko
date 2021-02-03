@@ -3,5 +3,5 @@
 ### Dependencies:
 * Pygame
 
-
+**Credit:** Maximillian Iyengar
 
