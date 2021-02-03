@@ -14,6 +14,7 @@ image_tiles_click = ['images/tiles/green_click.png', 'images/tiles/yellow_click.
 image_bamboo = ['images/bamboo/green.png', 'images/bamboo/yellow.png', 'images/bamboo/pink.png']
 
 width, height = 1400, 800
+board_center = (width / 2, height / 2)
 
 number_of_players = 2
 
@@ -32,7 +33,7 @@ button_colour = colours.CADETBLUE1
 button_hover_colour = colours.CADETBLUE2
 button_click_colour = colours.CADETBLUE3
 
-hexagon_size = 70
+hexagon_size = 70 #Radius (ie distance from point of hexagon to center)
 
 bamboo_height = 15
 bamboo_width = 20
@@ -41,3 +42,10 @@ max_bamboo = 4
 bamboo_location_x = 20
 bamboo_location_y = hexagon_size - ((bamboo_height * max_bamboo) / 2)
 
+panda_image = 'images/panda.png'
+panda_width = 40
+panda_height = 40
+
+gardener_image = 'images/gardener.png'
+gardener_width = panda_width
+gardener_height = panda_height

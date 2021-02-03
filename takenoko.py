@@ -8,6 +8,7 @@ from text_object import TextObject
 from button import Button
 from plots import Pond, Plot
 from board import MainBoard
+from characters import Panda, Gardener
 
 class Game:
     def __init__(self, width, height):
@@ -76,6 +77,7 @@ class Game:
         self.create_labels()
         self.create_buttons()
         self.create_board()
+        self.create_characters()
 
     def create_labels(self):
         self.player_label = TextObject('Player: 1', c.player_label_colour, 10, (c.top_bar_height - c.font_size)/2, c.font_size) #Create text at top of screen saying 'player 1'
@@ -91,13 +93,25 @@ class Game:
         self.grow_button = Button('grow', 20, 65 + 50, 50, 30, self.b_grow)
         self.grow_button.add(self.objects)
 
-        self.next_turn_button = Button('next turn', 20, 165, 70, 30, self.next_turn)
+        self.next_turn_button = Button('next turn', 20, 165, 90, 30, self.next_turn)
         self.next_turn_button.add(self.objects)
 
+        self.panda_move_button = Button('move panda', 20, 165 + 50, 120, 30, self.b_panda_move)
+        self.panda_move_button.add(self.objects)
+
+        self.gardener_move_button = Button('move gardener', 20, 265, 150, 30, self.b_gardener_move)
+        self.gardener_move_button.add(self.objects)
+
     def create_board(self):
-        self.board = MainBoard(c.hexagon_size, (c.width / 2, c.height / 2))
+        self.board = MainBoard(c.hexagon_size, c.board_center)
         self.board.place(Pond(0, 0))
         self.board.add(self.objects)
+
+    def create_characters(self):
+        self.panda = Panda(c.hexagon_size, c.board_center)
+        self.gardener = Gardener(c.hexagon_size, c.board_center)
+        self.panda.add(self.objects)
+        self.gardener.add(self.objects)
 
     # -- BUTTON PRESSED --
 
@@ -109,11 +123,14 @@ class Game:
 
     def b_grow(self):
         self.game_state = 'grow'
+    
+    def b_panda_move(self):
+        self.game_state = 'move panda'
+
+    def b_gardener_move(self):
+        self.game_state = 'move gardener'
 
     # -- GAME RULES --
-
-    #def check_buttons(self):
-
 
     def next_turn(self):
         self.current_player_number = (self.current_player_number + 1) % (c.number_of_players) #Increase current_player_number by 1, but cycle it through the total number of players
@@ -130,6 +147,7 @@ class Game:
         self.board.place(Plot(-1, 0, 'yellow'))
         self.board.place(Plot(1, 0, 'pink'))
         self.board.place(Plot(1, -1, 'pink'))
+
         
         while self.is_game_running:
             self.surface.blit(self.background_image, (0, 0)) #Reset display by rendering the background image
@@ -146,6 +164,16 @@ class Game:
                 selected_tile = self.board.select_tile()
                 if selected_tile:
                     selected_tile.remove_bamboo(1)
+            elif self.game_state == 'move panda':
+                selected_tile = self.board.select_tile()
+                if selected_tile:
+                    if self.panda.move(selected_tile): #If it was a valid move
+                        self.game_state = '' #Reset game state (panda has moved)
+            elif self.game_state == 'move gardener':
+                selected_tile = self.board.select_tile()
+                if selected_tile:
+                    if self.gardener.move(selected_tile): #If it was a valid move
+                        self.game_state = '' #Reset game state (gardener has moved)
 
             self.draw()
 

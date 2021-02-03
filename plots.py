@@ -3,6 +3,7 @@ from math import sqrt
 
 import config as c
 from coordinates import Axial
+import characters
 
 axial_directions = [Axial(+1, 0), Axial(+1, -1), Axial(0, -1), Axial(-1, 0), Axial(-1, +1), Axial(0, +1)] #This is for 'neighbours' - it is the six directions to go to get each neighbour
 
@@ -14,15 +15,14 @@ class Tile(pygame.sprite.Sprite): #TESTED - works!
 
         self.tile_height = None
         self.tile_width = None
-        self.small_surface = None
         self.surface = None
 
-    def get_surface(self, size):
+    def create_surface(self, size):
         self.surface = pygame.image.load(self.image).convert_alpha()
         self.tile_width = round(sqrt(3) * size)
         self.tile_height = round(2 * size)
 
-        self.small_surface = pygame.transform.scale(self.surface, (self.tile_width, self.tile_height)) #Scale the image appropriately
+        self.surface = pygame.transform.scale(self.surface, (self.tile_width, self.tile_height)) #Scale the image appropriately
 
     def generate_coords(self, size, center):
         cartesian_coords = self.axial.cartesian(size, center) #Get the cartesian coords of the center
@@ -30,8 +30,8 @@ class Tile(pygame.sprite.Sprite): #TESTED - works!
         return top_left_coords
 
     def draw(self, surface, size, center):
-        self.get_surface(size)
-        surface.blit(self.small_surface, self.generate_coords(size, center)) #Blit the smaller image in the correct spot
+        self.create_surface(size)
+        surface.blit(self.surface, self.generate_coords(size, center)) #Blit the smaller image in the correct spot
 
 
 class Plot(Tile):
@@ -54,21 +54,23 @@ class Plot(Tile):
             self.improvement = improvement
 
     def draw(self, surface, size, center):
-        self.get_surface(size)
+        self.create_surface(size)
+        self.create_bamboo_surface()
 
+        surface.blit(self.surface, self.generate_coords(size, center))
+
+    def create_bamboo_surface(self):
         #Clear bamboo surface:
         self.bamboo_surface = pygame.surface.Surface((c.bamboo_width, c.bamboo_height * c.max_bamboo))
 
-        #Add bamboo to self.small_surface:
+        #Add bamboo to self.surface:
         for i in range(self.bamboo_amount):
             #Put the bamboo in the correct place on the surface:
             self.bamboo_surface.blit(self.bamboo_image, (0, self.bamboo_surface.get_height() - ((i + 1) * c.bamboo_height)))
 
         self.bamboo_surface.set_colorkey((0, 0, 0, 0)) # Makes sure that the transparent pixels aren't blit (there was a hole in the tiles otherwise)
 
-        self.small_surface.blit(self.bamboo_surface, (c.bamboo_location_x, c.bamboo_location_y))
-
-        surface.blit(self.small_surface, self.generate_coords(size, center))
+        self.surface.blit(self.bamboo_surface, (c.bamboo_location_x, c.bamboo_location_y))
 
     def add_bamboo(self, amount):
         if self.bamboo_amount + amount <= 4:
