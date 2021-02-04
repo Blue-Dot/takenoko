@@ -29,9 +29,9 @@ class Character(pygame.sprite.Sprite):
     def check_move(self, destination):
         #Check if the destination and current position are in a straight line:
         if self.coords.r == destination.axial.r or self.coords.s == destination.axial.s or self.coords.q == destination.axial.q:
-            return True
-        else:  
-            return False
+            if self.coords != destination.axial: #Check the destination tile is a different tile
+                return True
+        return False
 
 class Panda(Character):
     def __init__(self, hexagon_size, board_center):
