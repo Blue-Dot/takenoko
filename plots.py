@@ -77,10 +77,14 @@ class Plot(Tile):
             self.bamboo_amount += amount
             return self.bamboo_amount
 
-    def grow(self): #INCOMPLETE
+    def grow(self, board):
         if self.is_irrigated:
             self.add_bamboo(1)
-        #Grow bamboo on all adjacent irrigated blots
+        
+        #Grow the neighbours of the same colour:
+        for i in self.neighbours(board):
+            if i.colour == self.colour and i.is_irrigated:
+                i.add_bamboo(1)
 
     def remove_bamboo(self, amount):
         if self.bamboo_amount - amount >= 0:
@@ -90,8 +94,18 @@ class Plot(Tile):
     def eat(self):
         self.remove_bamboo(1)
 
-    def neighbours(self, board): #INCOMPLETE
-        pass
+    def neighbours(self, board):
+        '''returns a list of tile objects - the neighbours of this tile in the board'''
+        neighbours_coords = []
+        for i in axial_directions:
+            neighbours_coords.append(self.axial.sum(i))
+        
+        neighbours = []
+        for j in neighbours_coords:
+            if (j.q, j.r) in board.hash_table:
+                neighbours.append(board.hash_table[(j.q, j.r)])
+
+        return neighbours
 
     # -- MOUSE HANDELING --
     def un_hover(self):
@@ -107,6 +121,7 @@ class Plot(Tile):
 class Pond(Tile):
     def __init__(self, q, r):
         super().__init__(q, r, c.image_tile_pond)
+        self.colour = 'blue' #This is for the neighbour check for the gardener move - so that it is a different colour to any other tile
 
     def hover(self):
         pass

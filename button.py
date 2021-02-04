@@ -43,6 +43,3 @@ class Button(pygame.sprite.Sprite):
         else:
             self.pressed = False
             self.create_surface(self.colour, self.text_colour) #Reset to normal
-
-
-

@@ -174,6 +174,7 @@ class Game:
                 selected_tile = self.board.select_tile()
                 if selected_tile:
                     if self.gardener.move(selected_tile): #If it was a valid move
+                        selected_tile.grow(self.board)
                         self.game_state = '' #Reset game state (gardener has moved)
 
             self.draw()

@@ -11,6 +11,11 @@ class Axial:
         y = (self.r * (3/2)) * size
         return (round(x + center[0]), round(y + center[1]))
 
+    def sum(self, a): #Sum two axial coordinates together
+        q = self.q + a.q
+        r = self.r + a.r
+        return Axial(q, r)
+
 class Cartesian(Axial): #Primarily for mouse... TESTED - works!
     def __init__(self, x, y, size, center):
         #Makes x and y relative to the center
@@ -42,3 +47,13 @@ class Cartesian(Axial): #Primarily for mouse... TESTED - works!
             rz = -rx-ry
         
         return rx, ry, rz
+
+#TESTING:
+'''
+a = Axial(0, 0)
+c = Axial(1, 1)
+b = a.sum(c)
+print(c.q, c.r, c.s)
+print(b.q, b.r, b.s)
+'''
+#axial.sum(a) works :)

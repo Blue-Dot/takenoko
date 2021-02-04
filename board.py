@@ -8,7 +8,7 @@ class Board(pygame.sprite.Sprite): #JUST A GENERAL BOARD - could be for plot obj
         super().__init__()
         self.size = size
         self.center = center
-        self.hash_table = {}
+        self.hash_table = {} #Keys are in the form (q coordinate, r coordinate)
 
         self.hovered_tiles = [] # For highlight_tiles method - tiles hovered in previous frame
         self.clicked_tiles = []
