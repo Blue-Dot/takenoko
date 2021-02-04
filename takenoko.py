@@ -168,6 +168,7 @@ class Game:
                 selected_tile = self.board.select_tile()
                 if selected_tile:
                     if self.panda.move(selected_tile): #If it was a valid move
+                        selected_tile.eat()
                         self.game_state = '' #Reset game state (panda has moved)
             elif self.game_state == 'move gardener':
                 selected_tile = self.board.select_tile()

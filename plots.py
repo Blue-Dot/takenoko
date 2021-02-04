@@ -87,6 +87,9 @@ class Plot(Tile):
             self.bamboo_amount -= amount
             return self.bamboo_amount
 
+    def eat(self):
+        self.remove_bamboo(1)
+
     def neighbours(self, board): #INCOMPLETE
         pass
 
