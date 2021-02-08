@@ -49,3 +49,5 @@ panda_height = 40
 gardener_image = 'images/gardener.png'
 gardener_width = panda_width
 gardener_height = panda_height
+
+river_width = 7

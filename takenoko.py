@@ -10,6 +10,8 @@ from plots import Pond, Plot
 from board import MainBoard
 from characters import Panda, Gardener
 
+from coordinates import Cubic
+
 class Game:
     def __init__(self, width, height):
 
@@ -148,7 +150,8 @@ class Game:
         self.board.place(Plot(1, 0, 'pink'))
         self.board.place(Plot(1, -1, 'pink'))
 
-        
+        self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
+
         while self.is_game_running:
             self.surface.blit(self.background_image, (0, 0)) #Reset display by rendering the background image
 
