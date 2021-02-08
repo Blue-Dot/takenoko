@@ -11,7 +11,7 @@ class Board(pygame.sprite.Sprite): #JUST A GENERAL BOARD - could be for plot obj
         self.center = center
         self.hash_table = {} #Keys are in the form (q coordinate, r coordinate)
 
-        self.river_system = RiverSystem()
+        self.river_system = RiverSystem(size, center)
 
         self.hovered_tiles = [] # For highlight_tiles method - tiles hovered in previous frame
         self.clicked_tiles = []
@@ -20,7 +20,7 @@ class Board(pygame.sprite.Sprite): #JUST A GENERAL BOARD - could be for plot obj
         for tile in self.hash_table:
             self.hash_table[tile].draw(surface, self.size, self.center)
 
-        self.river_system.draw(surface, self.size, self.center)
+        self.river_system.draw(surface)
 
     def place(self, tile): #Can't use 'add' because that's allready a method of pygame.sprite.Spirte which I am using - so I used 'place' instead
         coords = (tile.axial.q, tile.axial.r)

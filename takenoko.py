@@ -104,6 +104,9 @@ class Game:
         self.gardener_move_button = Button('move gardener', 20, 265, 150, 30, self.b_gardener_move)
         self.gardener_move_button.add(self.objects)
 
+        self.place_river_button = Button('place rivers', 20, 265 + 50, 130, 30, self.b_place_river)
+        self.place_river_button.add(self.objects)
+
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, c.board_center)
         self.board.place(Pond(0, 0))
@@ -132,6 +135,9 @@ class Game:
     def b_gardener_move(self):
         self.game_state = 'move gardener'
 
+    def b_place_river(self):
+        self.game_state = 'place river'
+
     # -- GAME RULES --
 
     def next_turn(self):
@@ -150,7 +156,7 @@ class Game:
         self.board.place(Plot(1, 0, 'pink'))
         self.board.place(Plot(1, -1, 'pink'))
 
-        self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
+        #self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
 
         while self.is_game_running:
             self.surface.blit(self.background_image, (0, 0)) #Reset display by rendering the background image
@@ -179,6 +185,8 @@ class Game:
                     if self.gardener.move(selected_tile): #If it was a valid move
                         selected_tile.grow(self.board)
                         self.game_state = '' #Reset game state (gardener has moved)
+            elif self.game_state == 'place river':
+                self.board.river_system.place_river()
 
             self.draw()
 

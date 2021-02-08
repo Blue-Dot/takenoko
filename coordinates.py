@@ -2,18 +2,16 @@ from math import sqrt
 
 #NOTE these coordinates are for hexagons/tiles. Ie. q + r + s = 0. They are not for rivers
 
-'''
---> = q coordinate
-\ 
- \  = r coordinate
-  v
-'''
+# --> = q coordinate
 
+# \ 
+#  \  = r coordinate
+#   v
 
 class Axial:
     def __init__(self, q, r):
         self.q, self.r = q, r
-        #self.s = - q - r
+        self.s = - q - r
         self.coords = (self.q, self.r)
     
     def cartesian(self, size, center):
@@ -58,19 +56,6 @@ class Cartesian(Axial): #Primarily for mouse... TESTED - works!
         
         return rx, ry, rz
 
-#TESTING:
-'''
-a = Axial(0, 0)
-c = Axial(1, 1)
-b = a.sum(c)
-print(c.q, c.r, c.s)
-print(b.q, b.r, b.s)
-'''
-#axial.sum(a) works :)
-
-# ~ RIVER COORDINATES ~
-# Ie. q + r + s != 0
-
 class Cubic:
     def __init__(self, x, y, z):
         self.x = x
@@ -88,3 +73,16 @@ class Cubic:
         cart_x = ((sqrt(3) / 2) * (self.x - self.y)) * size
         cart_y = ((1/2) * (- self.x - self.y) + self.z) * size
         return (round(cart_x + center[0]), round(cart_y + center[1]))
+
+#TESTING:
+'''
+a = Axial(0, 0)
+c = Axial(1, 1)
+b = a.sum(c)
+print(c.q, c.r, c.s)
+print(b.q, b.r, b.s)
+'''
+#axial.sum(a) works :)
+
+# ~ RIVER COORDINATES ~
+# Ie. q + r + s != 0

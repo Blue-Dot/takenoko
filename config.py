@@ -51,3 +51,4 @@ gardener_width = panda_width
 gardener_height = panda_height
 
 river_width = 7
+river_colour = colours.DODGERBLUE1
