@@ -159,7 +159,7 @@ class Game:
             if self.game_state == 'grow':
                 selected_tile = self.board.select_tile()
                 if selected_tile:
-                    selected_tile.grow()
+                    selected_tile.add_bamboo(1)
             elif self.game_state == 'eat':
                 selected_tile = self.board.select_tile()
                 if selected_tile:

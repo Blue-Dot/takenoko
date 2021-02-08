@@ -3,7 +3,6 @@ from math import sqrt
 
 import config as c
 from coordinates import Axial
-import characters
 
 axial_directions = [Axial(+1, 0), Axial(+1, -1), Axial(0, -1), Axial(-1, 0), Axial(-1, +1), Axial(0, +1)] #This is for 'neighbours' - it is the six directions to go to get each neighbour
 
