@@ -10,6 +10,7 @@ from math import sqrt
 
 class Axial:
     def __init__(self, q, r):
+        #q corresponds to x, r corresponds to z, s corresponds to y
         self.q, self.r = q, r
         self.s = - q - r
         self.coords = (self.q, self.r)
@@ -23,6 +24,9 @@ class Axial:
         q = self.q + a.q
         r = self.r + a.r
         return Axial(q, r)
+    
+    def get_coords(self):
+        return self.coords
 
 class Cartesian(Axial): #Primarily for mouse... TESTED - works!
     def __init__(self, x, y, size, center):
@@ -56,6 +60,9 @@ class Cartesian(Axial): #Primarily for mouse... TESTED - works!
         
         return rx, ry, rz
 
+# ~ RIVER COORDINATES ~
+# Ie. q + r + s != 0
+
 class Cubic:
     def __init__(self, x, y, z):
         self.x = x
@@ -68,11 +75,28 @@ class Cubic:
         z = self.z + a.z
         return Cubic(x, y, z)
 
+    def difference(self, a):
+        '''Calculate the difference between two cubic coordinates (ie the vector between them). Returns a Cubic object'''
+        x = abs(self.x - a.x)
+        y = abs(self.y - a.y)
+        z = abs(self.z - a.z)
+        return Cubic(x, y, z)
+
     def cartesian(self, size, center):
         '''Returns the cartesian form of this object''' 
         cart_x = ((sqrt(3) / 2) * (self.x - self.y)) * size
         cart_y = ((1/2) * (- self.x - self.y) + self.z) * size
         return (round(cart_x + center[0]), round(cart_y + center[1]))
+
+    def coords(self):
+        return (self.x, self.y, self.z)
+
+    def axial(self):
+        if self.x + self.y + self.z == 0:
+            return Axial(self.x, self.z)
+        else:
+            #raise Exception("Silly Max, you attempted to turn a Cubic object into an Axial object where x + y + z != 0")
+            print('nooooo x + y + z != 0')
 
 #TESTING:
 '''
@@ -81,8 +105,14 @@ c = Axial(1, 1)
 b = a.sum(c)
 print(c.q, c.r, c.s)
 print(b.q, b.r, b.s)
-'''
+
 #axial.sum(a) works :)
 
-# ~ RIVER COORDINATES ~
-# Ie. q + r + s != 0
+a = Cubic(1, 0, 1)
+b = Cubic(1, 0, 0)
+c = a.difference(b)
+d = b.difference(a)
+print(c.coords()) #Works :))
+print(d.coords())
+#These are the same (0, 0, 1) which means it works :)) yipee!
+'''

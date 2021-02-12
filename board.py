@@ -11,7 +11,7 @@ class Board(pygame.sprite.Sprite): #JUST A GENERAL BOARD - could be for plot obj
         self.center = center
         self.hash_table = {} #Keys are in the form (q coordinate, r coordinate)
 
-        self.river_system = RiverSystem(size, center)
+        self.river_system = RiverSystem(self)
 
         self.hovered_tiles = [] # For highlight_tiles method - tiles hovered in previous frame
         self.clicked_tiles = []
@@ -23,10 +23,10 @@ class Board(pygame.sprite.Sprite): #JUST A GENERAL BOARD - could be for plot obj
         self.river_system.draw(surface)
 
     def place(self, tile): #Can't use 'add' because that's allready a method of pygame.sprite.Spirte which I am using - so I used 'place' instead
-        coords = (tile.axial.q, tile.axial.r)
-        if coords in self.hash_table:
+        #coords = (tile.axial.q, tile.axial.r)
+        if tile.axial.get_coords() in self.hash_table:
             raise Exception('hi future max; you tried to put a hexagon in a place on the board which allready had a hexagon there')
-        self.hash_table[coords] = tile
+        self.hash_table[tile.axial.get_coords()] = tile
 
 class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
 
