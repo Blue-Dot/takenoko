@@ -94,9 +94,7 @@ class Cubic:
     def axial(self):
         if self.x + self.y + self.z == 0:
             return Axial(self.x, self.z)
-        else:
-            #raise Exception("Silly Max, you attempted to turn a Cubic object into an Axial object where x + y + z != 0")
-            print('nooooo x + y + z != 0')
+        raise Exception("Silly Max, you attempted to turn a Cubic object into an Axial object where x + y + z != 0")
 
 #TESTING:
 '''

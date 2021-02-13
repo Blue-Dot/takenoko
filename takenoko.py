@@ -1,5 +1,4 @@
 import pygame
-import random
 
 #My imports
 import config as c
@@ -9,8 +8,6 @@ from button import Button
 from plots import Pond, Plot
 from board import MainBoard
 from characters import Panda, Gardener
-
-from coordinates import Cubic
 
 class Game:
     def __init__(self, width, height):
@@ -49,7 +46,9 @@ class Game:
         self.grow_button = None
         self.next_turn_button = None
 
+        self.panda = None
         self.board = None
+        self.gardener = None
 
         self.create_game_objects()
         

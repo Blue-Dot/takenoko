@@ -2,6 +2,7 @@ import pygame
 from coordinates import Cubic, Cartesian
 import config as c
 import math
+from plots import Pond
 
 class River(pygame.sprite.Sprite):
     def __init__(self, a, b):
@@ -96,6 +97,9 @@ class RiverSystem():
             self.temp_river = None
             self.mouse_down = False
 
+            return True
+        return False
+
         '''
         if not self.check_river(self.temp_river): #If it is not a valid river, reset the temp_river
             self.temp_river = None
@@ -112,8 +116,13 @@ class RiverSystem():
         '''check to see if a river is valid --> boolean'''
         if (river.a.coords(), river.b.coords()) in self.rivers or (river.b.coords(), river.a.coords()) in self.rivers: #Is the river allready in the system?
             return False
-        if self.adjacent_tiles(river) == []:
+
+        adjacent_tiles = self.adjacent_tiles(river)
+        if adjacent_tiles == []: #If there are no adjacent tiles
             return False
+        for i in adjacent_tiles: #If an adjacent tile is a pond (not valid)   
+            if isinstance(i, Pond): 
+                return False
 
         if river.a.coords() not in self.valid_nodes:
             if river.b.coords() not in self.valid_nodes:
@@ -148,9 +157,8 @@ class RiverSystem():
         adjacent_tiles = []
 
         for i in adjacent_tile_coords:
-            if i: #testing purposes do delete
-                if i.get_coords() in self.board.hash_table:
-                    adjacent_tiles.append(self.board.hash_table[i.get_coords()])
+            if i.get_coords() in self.board.hash_table:
+                adjacent_tiles.append(self.board.hash_table[i.get_coords()])
         
         return adjacent_tiles
 
