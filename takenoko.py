@@ -147,13 +147,13 @@ class Game:
 
     def run(self):
         #For testing purposes (a sample map):
-        self.board.place(Plot(1, 1, 'green'))
-        self.board.place(Plot(0, 1, 'green'))
-        self.board.place(Plot(-1, 1, 'green'))
-        self.board.place(Plot(0, -1, 'yellow'))
-        self.board.place(Plot(-1, 0, 'yellow'))
-        self.board.place(Plot(1, 0, 'pink'))
-        self.board.place(Plot(1, -1, 'pink'))
+        self.board.place(Plot(1, 1, 'green', self.board))
+        self.board.place(Plot(0, 1, 'green', self.board))
+        self.board.place(Plot(-1, 1, 'green', self.board))
+        self.board.place(Plot(0, -1, 'yellow', self.board))
+        self.board.place(Plot(-1, 0, 'yellow', self.board))
+        self.board.place(Plot(1, 0, 'pink', self.board))
+        self.board.place(Plot(1, -1, 'pink', self.board))
 
         #self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
 

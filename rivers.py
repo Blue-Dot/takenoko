@@ -94,6 +94,11 @@ class RiverSystem():
                 if self.temp_river.b.coords() not in self.valid_nodes:
                     self.valid_nodes.append(self.temp_river.b.coords())
 
+                #Irrigate adjacent tiles
+                adjacent_tiles = self.adjacent_tiles(self.temp_river)
+                for i in adjacent_tiles: #If an adjacent tile is a pond (not valid)   
+                    i.irrigate()
+
             self.temp_river = None
             self.mouse_down = False
 

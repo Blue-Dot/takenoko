@@ -34,12 +34,12 @@ class Tile(pygame.sprite.Sprite): #TESTED - works!
 
 
 class Plot(Tile):
-    def __init__(self, q, r, colour, *improvement):
+    def __init__(self, q, r, colour, board, *improvement):
         self.bamboo_amount = 0
         self.bamboo_surface = pygame.surface.Surface((c.bamboo_width, c.bamboo_height * c.max_bamboo))
 
         self.colour = colour
-        self.is_irrigated = True #INCOMPLETE - This should be false in the final game...
+        self.is_irrigated = False
 
         self.colour_index = c.tile_colours.index(colour)
         self.image = c.image_tiles[self.colour_index]
@@ -47,10 +47,17 @@ class Plot(Tile):
         self.bamboo_image = pygame.image.load(c.image_bamboo[self.colour_index])
         self.bamboo_image = pygame.transform.scale(self.bamboo_image, (c.bamboo_width, c.bamboo_height))
 
+        self.board = board
+
         super().__init__(q, r, self.image)
 
         if improvement:
             self.improvement = improvement
+        
+        neighbours = self.neighbours(self.board)
+        for i in neighbours:
+            if isinstance(i, Pond):
+                self.irrigate()
 
     def draw(self, surface, size, center):
         self.create_surface(size)
@@ -105,6 +112,11 @@ class Plot(Tile):
                 neighbours.append(board.hash_table[(j.q, j.r)])
 
         return neighbours
+
+    def irrigate(self):
+        if not self.is_irrigated:
+            self.is_irrigated = True
+            self.add_bamboo(1)
 
     # -- MOUSE HANDELING --
     def un_hover(self):
