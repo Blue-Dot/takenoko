@@ -106,9 +106,12 @@ class Game:
         self.place_river_button = Button('place rivers', 20, 265 + 50, 130, 30, self.b_place_river)
         self.place_river_button.add(self.objects)
 
+        self.place_tile_button = Button('place tile', 20, 365, 110, 30, self.b_place_tile)
+        self.place_tile_button.add(self.objects)
+
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, c.board_center)
-        self.board.place(Pond(0, 0))
+        self.board.place(Pond(0, 0, self.board))
         self.board.add(self.objects)
 
     def create_characters(self):
@@ -136,6 +139,9 @@ class Game:
 
     def b_place_river(self):
         self.game_state = 'place river'
+
+    def b_place_tile(self):
+        self.game_state = 'place tile'
 
     # -- GAME RULES --
 
@@ -186,6 +192,8 @@ class Game:
                         self.game_state = '' #Reset game state (gardener has moved)
             elif self.game_state == 'place river':
                 self.board.river_system.place_river()
+            elif self.game_state == 'place tile':
+                self.board.place_tile('a')
 
             self.draw()
 

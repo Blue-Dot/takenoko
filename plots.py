@@ -7,14 +7,19 @@ from coordinates import Axial
 axial_directions = [Axial(+1, 0), Axial(+1, -1), Axial(0, -1), Axial(-1, 0), Axial(-1, +1), Axial(0, +1)] #This is for 'neighbours' - it is the six directions to go to get each neighbour
 
 class Tile(pygame.sprite.Sprite): #TESTED - works!
-    def __init__(self, q, r, image):
+    def __init__(self, q, r, colour, board):
         super().__init__()
-        self.image = image
+        self.colour = colour
         self.axial = Axial(q, r)
 
         self.tile_height = None
         self.tile_width = None
         self.surface = None
+
+        self.colour_index = c.tile_colours.index(colour)
+        self.image = c.image_tiles[self.colour_index]
+
+        self.board = board
 
     def create_surface(self, size):
         self.surface = pygame.image.load(self.image).convert_alpha()
@@ -32,29 +37,47 @@ class Tile(pygame.sprite.Sprite): #TESTED - works!
         self.create_surface(size)
         surface.blit(self.surface, self.generate_coords(size, center)) #Blit the smaller image in the correct spot
 
+    # -- MOUSE HANDELING --
+    def un_hover(self):
+        self.image = c.image_tiles[self.colour_index]
+
+    def hover(self):
+        self.image = c.image_tiles_hover[self.colour_index]
+
+    def click(self):
+        self.image = c.image_tiles_click[self.colour_index]
+
+    def neighbours(self, board):
+        '''returns a list of tile objects - the neighbours of this tile in the board'''
+        neighbours_coords = []
+        for i in axial_directions:
+            neighbours_coords.append(self.axial.sum(i))
+        
+        neighbours = []
+        for j in neighbours_coords:
+            if (j.q, j.r) in board.hash_table:
+                neighbours.append(board.hash_table[(j.q, j.r)])
+
+        return neighbours
+
 
 class Plot(Tile):
     def __init__(self, q, r, colour, board, *improvement):
+        super().__init__(q, r, colour, board)
+
         self.bamboo_amount = 0
         self.bamboo_surface = pygame.surface.Surface((c.bamboo_width, c.bamboo_height * c.max_bamboo))
 
-        self.colour = colour
         self.is_irrigated = False
-
-        self.colour_index = c.tile_colours.index(colour)
-        self.image = c.image_tiles[self.colour_index]
 
         self.bamboo_image = pygame.image.load(c.image_bamboo[self.colour_index])
         self.bamboo_image = pygame.transform.scale(self.bamboo_image, (c.bamboo_width, c.bamboo_height))
 
-        self.board = board
-
-        super().__init__(q, r, self.image)
-
         if improvement:
             self.improvement = improvement
         
-        neighbours = self.neighbours(self.board)
+        #Check if I am next to a pond:
+        neighbours = self.neighbours(self.board) 
         for i in neighbours:
             if isinstance(i, Pond):
                 self.irrigate()
@@ -100,45 +123,30 @@ class Plot(Tile):
     def eat(self):
         self.remove_bamboo(1)
 
-    def neighbours(self, board):
-        '''returns a list of tile objects - the neighbours of this tile in the board'''
-        neighbours_coords = []
-        for i in axial_directions:
-            neighbours_coords.append(self.axial.sum(i))
-        
-        neighbours = []
-        for j in neighbours_coords:
-            if (j.q, j.r) in board.hash_table:
-                neighbours.append(board.hash_table[(j.q, j.r)])
-
-        return neighbours
-
     def irrigate(self):
         if not self.is_irrigated:
             self.is_irrigated = True
             self.add_bamboo(1)
 
-    # -- MOUSE HANDELING --
-    def un_hover(self):
-        self.image = c.image_tiles[self.colour_index]
-
-    def hover(self):
-        self.image = c.image_tiles_hover[self.colour_index]
-
-    def click(self):
-        self.image = c.image_tiles_click[self.colour_index]
-
 
 class Pond(Tile):
-    def __init__(self, q, r):
-        super().__init__(q, r, c.image_tile_pond)
-        self.colour = 'blue' #This is for the neighbour check for the gardener move - so that it is a different colour to any other tile
+    def __init__(self, q, r, board):
+        super().__init__(q, r, 'blue', board)
 
-    def hover(self):
+    def grow(self, *args):
         pass
 
-    def un_hover(self):
+    def eat(self, *args):
         pass
 
-    def click(self):
+    def irrigate(self, *args):
         pass
+
+class TempTile(Tile):
+    def __init__(self, q, r, board):
+        self.colour_index = 3
+        self.image = c.image_tiles[self.colour_index]
+
+        super().__init__(q, r, 'grey', self.image)
+
+        self.board = board
