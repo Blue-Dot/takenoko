@@ -183,6 +183,7 @@ class Game:
                 if selected_tile:
                     if self.panda.move(selected_tile): #If it was a valid move
                         selected_tile.eat()
+                        #self.current_player.add_bamboo()
                         self.game_state = '' #Reset game state (panda has moved)
             elif self.game_state == 'move gardener':
                 selected_tile = self.board.select_tile()
@@ -193,7 +194,9 @@ class Game:
             elif self.game_state == 'place river':
                 self.board.river_system.place_river()
             elif self.game_state == 'place tile':
-                self.board.place_tile('a')
+                placed_tile = self.board.place_tile(Plot(0, 0, 'green', self.board))
+                if placed_tile:
+                    self.game_state = ''
 
             self.draw()
 

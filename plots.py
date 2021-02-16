@@ -74,6 +74,8 @@ class Plot(Tile):
 
         if improvement:
             self.improvement = improvement
+        else:
+            self.improvement = None
         
         #Check if I am next to a pond:
         neighbours = self.neighbours(self.board) 

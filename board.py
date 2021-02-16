@@ -1,10 +1,9 @@
 import pygame
 from coordinates import Cartesian
-from plots import Plot, TempTile, Pond
+from plots import Plot, TempTile, Pond, Tile
 from rivers import RiverSystem
 
 class Board(pygame.sprite.Sprite): #JUST A GENERAL BOARD - could be for plot objective cards(?)
-
     def __init__(self, size, center):
         super().__init__()
         self.size = size
@@ -31,8 +30,8 @@ class Board(pygame.sprite.Sprite): #JUST A GENERAL BOARD - could be for plot obj
         #coords = (tile.axial.q, tile.axial.r)
         if tile.axial.get_coords() in self.hash_table:
             #Tried to put a tile in a spot which allready had a tile
-            #raise Exception('hi future max; you tried to put a hexagon in a place on the board which allready had a hexagon there')
-            return False
+            raise Exception('hi future max; you tried to put a hexagon in a place on the board which allready had a hexagon there')
+            #return False
         self.hash_table[tile.axial.get_coords()] = tile
 
 class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
@@ -48,6 +47,7 @@ class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
                 return tile_coords
             elif mouse_coords_axial.coords != tile_coords: #Tile was clicked, but someone dragged their mouse off.
                 self.clicked_tiles.remove(tile_coords)
+                self.hovered_tiles.remove(tile_coords)
                 hash_table[tile_coords].un_hover()
                 return 'mouse_off'
         
@@ -70,7 +70,7 @@ class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
     def select_tile(self): # Returns the tile if one is selected
         '''Returns none if no hexagons were selected in that frame, returns the tile object if one was'''
         return_val = self.highlight_tiles(self.hash_table)
-        if return_val:
+        if return_val and return_val != 'mouse_off':
             #if isinstance(self.hash_table[return_val], Plot): #Makes sure the pond can't be returned
             return self.hash_table[return_val]
 
@@ -78,25 +78,22 @@ class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
         mouse_coords_axial = self.calculate_mouse_coords()
 
         #Add current tile location as a temp tile
-        #self.temp_table[mouse_coords_axial.get_coords()] = TempTile(mouse_coords_axial.q, mouse_coords_axial.r, self)
         temp_tile = TempTile(mouse_coords_axial.q, mouse_coords_axial.r, self)
-        
-        valid = False
 
         #CHECK TEMP TILE IS VALID:
         #If next to > 1 plot, or next to pond, it is valid
+        valid = False
         neighbours = temp_tile.neighbours(self)
         if len(neighbours) > 1:
             valid = True
-        for tile in neighbours:
-            if isinstance(tile, Pond):
+        for i in neighbours:
+            if isinstance(i, Pond):
                 valid = True
 
         #If allready in map, it is not valid
         if mouse_coords_axial.get_coords() in self.hash_table:
             valid = False
 
-        #
         if valid:
             self.temp_table[mouse_coords_axial.get_coords()] = TempTile(mouse_coords_axial.q, mouse_coords_axial.r, self)
         
@@ -104,10 +101,19 @@ class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
         if return_val == 'mouse_off':
             self.temp_table = {} #Mouse moved off tile, so clear temp_table (not temp tiles)
         elif return_val:
-            #CLICKED ON A VALID SPOT
-            print('clickety clicked')
+            if tile.improvement:
+                plot = Plot(mouse_coords_axial.q, mouse_coords_axial.r, tile.colour, self, tile.improvement)
+            else:
+                plot = Plot(mouse_coords_axial.q, mouse_coords_axial.r, tile.colour, self)
+            self.place(plot)
 
+            self.hovered_tiles = []
+            self.clicked_tiles = []
+            self.temp_table = {}
 
+            #Irrigate the new plot if it is next to a river:
+
+            return True
 
     def calculate_mouse_coords(self):
         mouse_coords = pygame.mouse.get_pos()
