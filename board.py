@@ -97,7 +97,14 @@ class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
         if valid:
             self.temp_table[mouse_coords_axial.get_coords()] = TempTile(mouse_coords_axial.q, mouse_coords_axial.r, self)
         
-        return_val = self.highlight_tiles(self.temp_table)
+        try:
+            return_val = self.highlight_tiles(self.temp_table)
+        except:
+            self.hovered_tiles = []
+            self.clicked_tiles = []
+            self.temp_table = {}
+            return_val = None
+
         if return_val == 'mouse_off':
             self.temp_table = {} #Mouse moved off tile, so clear temp_table (not temp tiles)
         elif return_val:
