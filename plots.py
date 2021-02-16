@@ -60,7 +60,6 @@ class Tile(pygame.sprite.Sprite): #TESTED - works!
 
         return neighbours
 
-
 class Plot(Tile):
     def __init__(self, q, r, colour, board, *improvement):
         super().__init__(q, r, colour, board)
@@ -142,7 +141,7 @@ class Pond(Tile):
     def irrigate(self, *args):
         pass
 
-class TempTile(Tile):
+class TempTile(Tile): #For placeing a new tile
     def __init__(self, q, r, board):
         self.colour_index = 3
         self.image = c.image_tiles[self.colour_index]

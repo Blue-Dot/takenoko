@@ -6,10 +6,10 @@ caption = 'Takenoko'
 frame_rate = 30
 
 image_tile_pond = 'images/tiles/tile.png'
-tile_colours = ['green', 'yellow', 'pink']
-image_tiles = ['images/tiles/green.png', 'images/tiles/yellow.png', 'images/tiles/pink.png']
-image_tiles_hover = ['images/tiles/green_hover.png', 'images/tiles/yellow_hover.png', 'images/tiles/pink_hover.png']
-image_tiles_click = ['images/tiles/green_click.png', 'images/tiles/yellow_click.png', 'images/tiles/pink_click.png']
+tile_colours = ['green', 'yellow', 'pink', 'grey', 'blue']
+image_tiles = ['images/tiles/green.png', 'images/tiles/yellow.png', 'images/tiles/pink.png', 'images/tiles/place_holder_tile.png', 'images/tiles/tile.png']
+image_tiles_hover = ['images/tiles/green_hover.png', 'images/tiles/yellow_hover.png', 'images/tiles/pink_hover.png', 'images/tiles/place_holder_tile.png', 'images/tiles/tile.png']
+image_tiles_click = ['images/tiles/green_click.png', 'images/tiles/yellow_click.png', 'images/tiles/pink_click.png', 'images/tiles/place_holder_tile.png', 'images/tiles/tile.png']
 
 image_bamboo = ['images/bamboo/green.png', 'images/bamboo/yellow.png', 'images/bamboo/pink.png']
 

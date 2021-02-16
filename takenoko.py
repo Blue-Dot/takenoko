@@ -168,7 +168,7 @@ class Game:
 
             self.handle_events()
             
-            print(self.game_state)
+            #print(self.game_state)
 
             if self.game_state == 'grow':
                 selected_tile = self.board.select_tile()
