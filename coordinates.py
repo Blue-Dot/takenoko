@@ -91,6 +91,9 @@ class Cubic:
     def coords(self):
         return (self.x, self.y, self.z)
 
+    def get_coords(self): #Alias for self.coords
+        return self.coords()
+
     def axial(self):
         if self.x + self.y + self.z == 0:
             return Axial(self.x, self.z)

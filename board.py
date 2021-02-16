@@ -101,17 +101,20 @@ class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
         if return_val == 'mouse_off':
             self.temp_table = {} #Mouse moved off tile, so clear temp_table (not temp tiles)
         elif return_val:
+            #USER CLICKED IN A VALID LOCATION: PLACE TILE
             if tile.improvement:
                 plot = Plot(mouse_coords_axial.q, mouse_coords_axial.r, tile.colour, self, tile.improvement)
             else:
                 plot = Plot(mouse_coords_axial.q, mouse_coords_axial.r, tile.colour, self)
             self.place(plot)
 
+            #Irrigate the new plot if it is next to a river:
+            if self.river_system.is_irrigated(plot):
+                plot.irrigate()
+
             self.hovered_tiles = []
             self.clicked_tiles = []
             self.temp_table = {}
-
-            #Irrigate the new plot if it is next to a river:
 
             return True
 

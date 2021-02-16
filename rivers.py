@@ -167,3 +167,9 @@ class RiverSystem():
         
         return adjacent_tiles
 
+    def is_irrigated(self, tile):
+        '''Iterate through all rivers checking if a tile is irrigated. Coords is an Axial object'''
+        for river in self.rivers:
+            if tile in self.adjacent_tiles(self.rivers[river]):
+                return True
+        return False
