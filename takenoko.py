@@ -153,7 +153,7 @@ class Game:
 
     def run(self):
         #For testing purposes (a sample map):
-        self.board.place(Plot(1, 1, 'green', self.board))
+        self.board.place(Plot(1, 1, 'green', self.board, 'panda'))
         self.board.place(Plot(0, 1, 'green', self.board))
         self.board.place(Plot(-1, 1, 'green', self.board))
         self.board.place(Plot(0, -1, 'yellow', self.board))
@@ -194,7 +194,7 @@ class Game:
             elif self.game_state == 'place river':
                 self.board.river_system.place_river()
             elif self.game_state == 'place tile':
-                placed_tile = self.board.place_tile(Plot(0, 0, 'green', self.board))
+                placed_tile = self.board.place_tile(Plot(0, 0, 'green', self.board, 'gardener'))
                 if placed_tile:
                     self.game_state = ''
 

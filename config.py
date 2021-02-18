@@ -1,5 +1,6 @@
 #Imports rgb values for common colours
 import colours
+from math import sqrt
 
 background_image = 'images/asanoha-400px.png' #CREDIT: https://www.toptal.com/designers/subtlepatterns/japanese-asanoha/ - Accessed 1 Jan 2021
 caption = 'Takenoko'
@@ -41,6 +42,12 @@ max_bamboo = 4
 
 bamboo_location_x = 20
 bamboo_location_y = hexagon_size - ((bamboo_height * max_bamboo) / 2)
+
+improvements = ['irrigation', 'panda', 'gardener']
+improvement_images = ['images/improvements/irrigation.png', 'images/improvements/panda.png', 'images/improvements/gardener.png']
+improvement_size = round(hexagon_size / 5) #Diameter (consistent with hexagon size)
+improvement_location_x = round((sqrt(3) / 2) * (hexagon_size - improvement_size))
+improvement_location_y = 90
 
 panda_image = 'images/panda.png'
 panda_width = 40

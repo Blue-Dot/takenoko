@@ -64,16 +64,16 @@ class Plot(Tile):
     def __init__(self, q, r, colour, board, *improvement):
         super().__init__(q, r, colour, board)
 
+        self.is_irrigated = False
+
         self.bamboo_amount = 0
         self.bamboo_surface = pygame.surface.Surface((c.bamboo_width, c.bamboo_height * c.max_bamboo))
-
-        self.is_irrigated = False
 
         self.bamboo_image = pygame.image.load(c.image_bamboo[self.colour_index])
         self.bamboo_image = pygame.transform.scale(self.bamboo_image, (c.bamboo_width, c.bamboo_height))
 
         if improvement:
-            self.improvement = improvement
+            self.add_improvement(improvement[0])
         else:
             self.improvement = None
         
@@ -81,11 +81,12 @@ class Plot(Tile):
         neighbours = self.neighbours(self.board) 
         for i in neighbours:
             if isinstance(i, Pond):
-                self.irrigate()
+                self.irrigate() #Irrigate if next to a pond instance
 
     def draw(self, surface, size, center):
         self.create_surface(size)
         self.create_bamboo_surface()
+        self.draw_improvement_surface()
 
         surface.blit(self.surface, self.generate_coords(size, center))
 
@@ -102,6 +103,24 @@ class Plot(Tile):
 
         self.surface.blit(self.bamboo_surface, (c.bamboo_location_x, c.bamboo_location_y))
 
+    def draw_improvement_surface(self):
+        if self.improvement != None:
+            self.surface.blit(self.improvement_surface, (c.improvement_location_x, c.improvement_location_y))
+
+    def add_improvement(self, improvement):
+        '''improvement = 'irrigation', 'panda' or 'gardener/' '''
+        if not self.improvement or self.improvement == None:
+            self.improvement = improvement
+            self.improvement_index = c.improvements.index(self.improvement)
+        
+            self.improvement_surface = pygame.image.load(c.improvement_images[self.improvement_index])
+            self.improvement_surface = pygame.transform.scale(self.improvement_surface, (round(c.improvement_size * sqrt(3)), c.improvement_size * 2))
+
+            if improvement == 'irrigation':
+                self.irrigate()
+        else:
+            raise Exception('allready an improvement here')
+
     def add_bamboo(self, amount):
         if self.bamboo_amount + amount <= 4:
             self.bamboo_amount += amount
@@ -109,12 +128,18 @@ class Plot(Tile):
 
     def grow(self, board):
         if self.is_irrigated:
-            self.add_bamboo(1)
+            if self.improvement == 'gardener':
+                self.add_bamboo(2)
+            else:
+                self.add_bamboo(1)
         
         #Grow the neighbours of the same colour:
         for i in self.neighbours(board):
             if i.colour == self.colour and i.is_irrigated:
-                i.add_bamboo(1)
+                if i.improvement == 'gardener':
+                    i.add_bamboo(2)
+                else:
+                    i.add_bamboo(1)
 
     def remove_bamboo(self, amount):
         if self.bamboo_amount - amount >= 0:
@@ -122,7 +147,10 @@ class Plot(Tile):
             return self.bamboo_amount
 
     def eat(self):
-        self.remove_bamboo(1)
+        if self.improvement != 'panda':
+            self.remove_bamboo(1)
+        else:
+            return False
 
     def irrigate(self):
         if not self.is_irrigated:
