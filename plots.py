@@ -109,17 +109,14 @@ class Plot(Tile):
 
     def add_improvement(self, improvement):
         '''improvement = 'irrigation', 'panda' or 'gardener/' '''
-        if not self.improvement or self.improvement == None:
-            self.improvement = improvement
-            self.improvement_index = c.improvements.index(self.improvement)
-        
-            self.improvement_surface = pygame.image.load(c.improvement_images[self.improvement_index])
-            self.improvement_surface = pygame.transform.scale(self.improvement_surface, (round(c.improvement_size * sqrt(3)), c.improvement_size * 2))
+        self.improvement = improvement
+        self.improvement_index = c.improvements.index(self.improvement)
+    
+        self.improvement_surface = pygame.image.load(c.improvement_images[self.improvement_index])
+        self.improvement_surface = pygame.transform.scale(self.improvement_surface, (round(c.improvement_size * sqrt(3)), c.improvement_size * 2))
 
-            if improvement == 'irrigation':
-                self.irrigate()
-        else:
-            raise Exception('allready an improvement here')
+        if improvement == 'irrigation':
+            self.irrigate()
 
     def add_bamboo(self, amount):
         if self.bamboo_amount + amount <= 4:
@@ -173,9 +170,6 @@ class Pond(Tile):
 
 class TempTile(Tile): #For placeing a new tile
     def __init__(self, q, r, board):
-        self.colour_index = 3
-        self.image = c.image_tiles[self.colour_index]
+        super().__init__(q, r, 'grey', board)
 
-        super().__init__(q, r, 'grey', self.image)
-
-        self.board = board
+        #self.board = board
