@@ -173,5 +173,3 @@ class Pond(Tile):
 class TempTile(Tile): #For placeing a new tile
     def __init__(self, q, r, board):
         super().__init__(q, r, 'grey', board)
-
-        #self.board = board

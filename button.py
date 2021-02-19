@@ -5,7 +5,6 @@ import config as c
 class Button(pygame.sprite.Sprite):
     def __init__(self, text, x, y, width, height, on_click):
         super().__init__()
-        self.coords = (x, y)
         self.rect = pygame.Rect(x, y, width, height)
         self.size = (width, height)
         self.text = text
@@ -22,7 +21,7 @@ class Button(pygame.sprite.Sprite):
     
     def draw(self, surface):
         self.check_mouse()
-        surface.blit(self.surface, self.coords)
+        surface.blit(self.surface, (self.rect.topleft))
 
     def create_surface(self, colour, text_colour):
         self.text_object = TextObject(self.text, text_colour, 5, ((self.size[1] - 20) / 2), 20)
@@ -43,3 +42,6 @@ class Button(pygame.sprite.Sprite):
         else:
             self.pressed = False
             self.create_surface(self.colour, self.text_colour) #Reset to normal
+        
+    def move_to(self, x, y):
+        self.rect = self.rect.move(x - self.rect.x, y - self.rect.y)

@@ -8,6 +8,7 @@ from button import Button
 from plots import Pond, Plot
 from board import MainBoard
 from characters import Panda, Gardener
+#from objectives import Hand, Objective
 
 class Game:
     def __init__(self, width, height):
@@ -24,7 +25,7 @@ class Game:
         self.background_image = self.tile_background(pygame.image.load(c.background_image).convert()) #Generate background image by tiling pattern
         self.frame_rate = c.frame_rate
         self.objects = pygame.sprite.Group() #All game objects
-        self.is_game_running = True 
+        self.is_game_running = True
         self.clock = pygame.time.Clock()
 
         pygame.display.set_caption(c.caption)
@@ -33,7 +34,7 @@ class Game:
 
         self.game_state = "" #CURRENT GAME STATE(!!)
 
-        self.players = [Player(), Player()]
+        self.players = [Player(self), Player(self)]
         self.current_player_number = 0
         self.current_player = self.players[self.current_player_number]
 
@@ -41,10 +42,6 @@ class Game:
 
         #Buttons
         self.player_label = None
-        self.quit_button = None
-        self.eat_button = None
-        self.grow_button = None
-        self.next_turn_button = None
 
         self.panda = None
         self.board = None
@@ -65,7 +62,8 @@ class Game:
     def draw(self):
         for spr in self.objects.sprites():
             spr.draw(self.surface)
-        #self.objects.draw(self.surface)
+        
+        self.current_player.draw(self.surface)
 
     def handle_events(self):
         for event in pygame.event.get():
