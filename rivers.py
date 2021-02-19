@@ -39,11 +39,10 @@ class RiverSystem():
     def add_river(self, a, b):
         self.rivers[(a, b)] = River(a, b)
 
-    def place_river(self): #INCOMPLETE
+    def place_river(self):
         '''Use the mouse to place a new river'''
 
         #CALCULATE THE COORDINATES OF THE RIVER NEAREST TO THE MOUSE
-
         mouse_coords = pygame.mouse.get_pos()
 
         mouse_coords_axial = Cartesian(mouse_coords[0], mouse_coords[1], self.size, self.center)
