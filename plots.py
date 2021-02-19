@@ -152,8 +152,10 @@ class Plot(Tile):
     def irrigate(self):
         if not self.is_irrigated:
             self.is_irrigated = True
-            self.add_bamboo(1)
-
+            if self.improvement == 'gardener':
+                self.add_bamboo(2)
+            else:
+                self.add_bamboo(1)
 
 class Pond(Tile):
     def __init__(self, q, r, board):
