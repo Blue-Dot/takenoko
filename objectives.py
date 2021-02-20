@@ -19,7 +19,10 @@ class Hand(pygame.sprite.Sprite):
                 i.draw(surface, (rect.x + index * (c.objective_width + c.objective_spacing), rect.y))
 
     def add_objective(self, objective):
-        self.objectives.append(objective)
+        if len(self.objectives) < 5:
+            self.objectives.append(objective)
+        else:
+            return False
     
     def remove_objective(self, objective):
         self.objectives.remove(objective)
@@ -27,6 +30,7 @@ class Hand(pygame.sprite.Sprite):
 
 class Objective(pygame.sprite.Sprite):
     def __init__(self, hand):
+        '''hand = None if not in a hand'''
         self.hand = hand
 
         self.surface = pygame.surface.Surface((c.objective_width, c.objective_height))
@@ -45,5 +49,8 @@ class Objective(pygame.sprite.Sprite):
         return True
     
     def complete(self):
-        self.hand.remove_objective(self)
+        if self.hand is not None:
+            self.hand.remove_objective(self)
+        else:
+            raise Exception('This objective is not in a hand')
 

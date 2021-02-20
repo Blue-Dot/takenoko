@@ -4,8 +4,6 @@ class Player:
     def __init__(self, game):
         self.game = game
         self.hand = Hand(self.game)
-        self.hand.add_objective(Objective(self.hand))
-        self.hand.add_objective(Objective(self.hand))
 
         self.river_reserve = 0
         self.bamboo_reserve = []

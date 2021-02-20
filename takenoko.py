@@ -8,7 +8,7 @@ from button import Button
 from plots import Pond, Plot
 from board import MainBoard
 from characters import Panda, Gardener
-#from objectives import Hand, Objective
+from objectives import Hand, Objective
 
 class Game:
     def __init__(self, width, height):
@@ -86,8 +86,8 @@ class Game:
         self.quit_button = Button('quit', c.width - 55, 5, 50, 30, self.b_quit)
         self.quit_button.add(self.objects)
 
-        self.eat_button = Button('eat', 20, 65, 50, 30, self.b_eat)
-        self.eat_button.add(self.objects)
+        self.add_objective_button = Button('add objective', 20, 65, 150, 30, self.b_add_objective)
+        self.add_objective_button.add(self.objects)
 
         self.grow_button = Button('grow', 20, 65 + 50, 50, 30, self.b_grow)
         self.grow_button.add(self.objects)
@@ -123,8 +123,8 @@ class Game:
     def b_quit(self):
         self.is_game_running = False
 
-    def b_eat(self):
-        self.game_state = 'eat'
+    def b_add_objective(self):
+        self.game_state = 'add objective'
 
     def b_grow(self):
         self.game_state = 'grow'
@@ -159,6 +159,9 @@ class Game:
         self.board.place(Plot(1, 0, 'pink', self.board))
         self.board.place(Plot(1, -1, 'pink', self.board))
 
+        self.players[0].hand.add_objective(Objective(self.players[0].hand))
+        self.players[0].hand.add_objective(Objective(self.players[0].hand))
+
         #self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
 
         while self.is_game_running:
@@ -172,10 +175,10 @@ class Game:
                 selected_tile = self.board.select_tile()
                 if selected_tile:
                     selected_tile.add_bamboo(1)
-            elif self.game_state == 'eat':
-                selected_tile = self.board.select_tile()
-                if selected_tile:
-                    selected_tile.remove_bamboo(1)
+            elif self.game_state == 'add objective':
+                if self.current_player.hand.add_objective(Objective(self.current_player.hand)) is False:
+                    print('nope too many objectives')
+                self.game_state = ''
             elif self.game_state == 'move panda':
                 selected_tile = self.board.select_tile()
                 if selected_tile:

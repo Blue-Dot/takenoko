@@ -47,7 +47,7 @@ class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
                 return tile_coords
             elif mouse_coords_axial.coords != tile_coords: #Tile was clicked, but someone dragged their mouse off.
                 self.clicked_tiles.remove(tile_coords)
-                self.hovered_tiles.remove(tile_coords)
+                #self.hovered_tiles.remove(tile_coords)
                 hash_table[tile_coords].un_hover()
                 return 'mouse_off'
         
