@@ -1,14 +1,16 @@
 import pygame
+import json
 
 #My imports
 import config as c
 from player import Player
 from text_object import TextObject
 from button import Button
-from plots import Pond, Plot
-from board import MainBoard
+from plots import Pond, Plot, FloatingPlot
+from board import MainBoard, Board
 from characters import Panda, Gardener
-from objectives import Hand, Objective
+from objectives import Objective
+from piles import Pile
 
 class Game:
     def __init__(self, width, height):
@@ -40,8 +42,10 @@ class Game:
 
         # -- GAME OBJECTS --
 
-        #Buttons
         self.player_label = None
+
+        self.pile_tiles = None
+        self.pile_objectives = {}
 
         self.panda = None
         self.board = None
@@ -77,6 +81,7 @@ class Game:
         self.create_buttons()
         self.create_board()
         self.create_characters()
+        self.create_piles()
 
     def create_labels(self):
         self.player_label = TextObject('Player: 1', c.player_label_colour, 10, (c.top_bar_height - c.font_size)/2, c.font_size) #Create text at top of screen saying 'player 1'
@@ -118,6 +123,16 @@ class Game:
         self.panda.add(self.objects)
         self.gardener.add(self.objects)
 
+    def create_piles(self):
+        data_file = open("data.json", "r")
+        data = json.load(data_file)
+        data_file.close()
+
+        self.pile_tiles = Pile(data["tiles"]).shuffle() #For placing tiles
+        self.pile_objectives["panda"] = Pile(data["objectives"]["panda"]).shuffle()
+        self.pile_objectives["gardener"]  = Pile(data["objectives"]["gardener"]).shuffle()
+        self.pile_objectives["plots"]  = Pile(data["objectives"]["plots"]).shuffle() #For the 'plot' objectives
+
     # -- BUTTON PRESSED --
 
     def b_quit(self):
@@ -139,7 +154,10 @@ class Game:
         self.game_state = 'place river'
 
     def b_place_tile(self):
-        self.game_state = 'place tile'
+        if self.game_state != 'place tile':
+            if not self.pile_tiles.empty():
+                self.top_tile = self.pile_tiles.take()
+                self.game_state = 'place tile'
 
     # -- GAME RULES --
 
@@ -195,7 +213,7 @@ class Game:
             elif self.game_state == 'place river':
                 self.board.river_system.place_river()
             elif self.game_state == 'place tile':
-                placed_tile = self.board.place_tile(Plot(0, 0, 'green', self.board, 'gardener'))
+                placed_tile = self.board.place_tile(FloatingPlot(self.top_tile['colour'], self.top_tile['improvements']))
                 if placed_tile:
                     self.game_state = ''
 

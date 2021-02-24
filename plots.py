@@ -61,7 +61,7 @@ class Tile(pygame.sprite.Sprite): #TESTED - works!
         return neighbours
 
 class Plot(Tile):
-    def __init__(self, q, r, colour, board, *improvement):
+    def __init__(self, q, r, colour, board, improvement = None):
         super().__init__(q, r, colour, board)
 
         self.is_irrigated = False
@@ -72,10 +72,9 @@ class Plot(Tile):
         self.bamboo_image = pygame.image.load(c.image_bamboo[self.colour_index])
         self.bamboo_image = pygame.transform.scale(self.bamboo_image, (c.bamboo_width, c.bamboo_height))
 
-        if improvement:
-            self.add_improvement(improvement[0])
-        else:
-            self.improvement = None
+        self.improvement = None
+        if improvement is not None:
+            self.add_improvement(improvement)
         
         #Check if I am next to a pond:
         neighbours = self.neighbours(self.board) 
@@ -173,3 +172,14 @@ class Pond(Tile):
 class TempTile(Tile): #For placeing a new tile
     def __init__(self, q, r, board):
         super().__init__(q, r, 'grey', board)
+
+class FloatingPlot(Plot): #A tile without a location or board - I should have done this better... (eg by not having tiles have coords) but oh well
+    def __init__(self, colour, improvement=None):
+        self.improvement = None
+        if improvement is not None:
+            self.add_improvement(improvement)
+
+        self.colour = colour
+    
+    def irrigate(self):
+        pass
