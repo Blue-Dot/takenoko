@@ -20,5 +20,17 @@ class Player:
     def add_bamboo(self, colour):
         self.bamboo_reserve.append(colour)
     
+    def trade_bamboo(self, bamboo):
+        '''check if bamboo (a list) is in reserve. removes bamboo if it is valid. returns boolean'''
+        reserve = self.bamboo_reserve.copy()
+        for i in bamboo:
+            if i in reserve:
+                reserve.remove(i)
+            else:
+                return False
+
+        self.bamboo_reserve = reserve
+        return True
+
     def complete_objective(self, objective):
         pass

@@ -32,6 +32,11 @@
                 "id": "PA1",
                 "points": 2,
                 "bamboo": ["pink", "pink"]
+            },
+            {
+                "id": "PA2",
+                "points": 3,
+                "bamboo": ["pink", "green", "yellow"]
             }
         ],
         "gardener": [

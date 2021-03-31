@@ -145,6 +145,7 @@ class Plot(Tile):
     def eat(self):
         if self.improvement != 'panda':
             self.remove_bamboo(1)
+            return self.colour
         else:
             return False
 
@@ -167,6 +168,9 @@ class Pond(Tile):
         pass
 
     def irrigate(self, *args):
+        pass
+
+    def add_bamboo(self, *args):
         pass
 
 class TempTile(Tile): #For placeing a new tile

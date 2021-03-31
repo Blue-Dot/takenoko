@@ -7,7 +7,7 @@ from player import Player
 from text_object import TextObject
 from button import Button
 from plots import Pond, Plot, FloatingPlot
-from board import MainBoard, Board
+from board import MainBoard
 from characters import Panda, Gardener
 from objectives import Objective
 from piles import Pile
@@ -158,6 +158,9 @@ class Game:
             if not self.pile_tiles.empty():
                 self.top_tile = self.pile_tiles.take()
                 self.game_state = 'place tile'
+            else:
+                print('no more tiles lol')
+        print('you have to place a tile now')
 
     # -- GAME RULES --
 
@@ -177,8 +180,8 @@ class Game:
         self.board.place(Plot(1, 0, 'pink', self.board))
         self.board.place(Plot(1, -1, 'pink', self.board))
 
-        self.players[0].hand.add_objective(Objective(self.players[0].hand))
-        self.players[0].hand.add_objective(Objective(self.players[0].hand))
+        #self.players[0].hand.add_objective(Objective(self.players[0].hand))
+        #self.players[0].hand.add_objective(Objective(self.players[0].hand))
 
         #self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
 
@@ -194,15 +197,26 @@ class Game:
                 if selected_tile:
                     selected_tile.add_bamboo(1)
             elif self.game_state == 'add objective':
-                if self.current_player.hand.add_objective(Objective(self.current_player.hand)) is False:
-                    print('nope too many objectives')
+
+                if not self.pile_objectives["panda"].empty(): #If the pile is not empty
+                    if self.current_player.hand.full() is False:
+                        objective = self.pile_objectives["panda"].take()
+                        objective.assign_hand(self.current_player.hand)
+                        self.current_player.hand.add_objective(objective)
+                    else:
+                        print("your hand is full lol")
+                else:
+                    print('no more objectives lol')
+                
                 self.game_state = ''
+
             elif self.game_state == 'move panda':
                 selected_tile = self.board.select_tile()
                 if selected_tile:
                     if self.panda.move(selected_tile): #If it was a valid move
-                        selected_tile.eat()
-                        #self.current_player.add_bamboo()
+                        bamboo = selected_tile.eat()
+                        if bamboo is not False:
+                            self.current_player.add_bamboo(bamboo)
                         self.game_state = '' #Reset game state (panda has moved)
             elif self.game_state == 'move gardener':
                 selected_tile = self.board.select_tile()
@@ -213,7 +227,7 @@ class Game:
             elif self.game_state == 'place river':
                 self.board.river_system.place_river()
             elif self.game_state == 'place tile':
-                placed_tile = self.board.place_tile(FloatingPlot(self.top_tile['colour'], self.top_tile['improvements']))
+                placed_tile = self.board.place_tile(self.top_tile)
                 if placed_tile:
                     self.game_state = ''
 

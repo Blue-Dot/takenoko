@@ -65,3 +65,5 @@ objective_height = 150
 objective_spacing = 20
 objective_y = height - objective_height - objective_spacing
 objective_colour = colours.CADETBLUE4
+
+objective_bamboo_dimensions = (round((objective_width / 3)), round((objective_width / 3) / bamboo_width * bamboo_height))
