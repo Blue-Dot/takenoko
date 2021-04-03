@@ -112,6 +112,9 @@ class Game:
         self.place_tile_button = Button('place tile', 20, 365, 110, 30, self.b_place_tile)
         self.place_tile_button.add(self.objects)
 
+        self.check_bamboo_button = Button('place bamboo', 20, 365+50, 120, 30, self.b_check_bamboo)
+        self.check_bamboo_button.add(self.objects)
+
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, c.board_center)
         self.board.place(Pond(0, 0, self.board))
@@ -160,7 +163,11 @@ class Game:
                 self.game_state = 'place tile'
             else:
                 print('no more tiles lol')
-        print('you have to place a tile now')
+        else:
+            print('you have to place a tile now')
+
+    def b_check_bamboo(self):
+        self.game_state = "check bamboo"
 
     # -- GAME RULES --
 
@@ -230,7 +237,13 @@ class Game:
                 placed_tile = self.board.place_tile(self.top_tile)
                 if placed_tile:
                     self.game_state = ''
+            elif self.game_state == 'check bamboo':
+                colour = input('colour:')
+                length = int(input('length:'))
+                improvement = input('improvement:')
 
+                print(self.board.search_bamboo(colour, length, improvement))
+                self.game_state = ""
             self.draw()
 
             pygame.display.flip()

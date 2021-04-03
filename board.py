@@ -129,3 +129,17 @@ class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
         mouse_coords = pygame.mouse.get_pos()
         return Cartesian(mouse_coords[0], mouse_coords[1], self.size, self.center)        
 
+    def search_bamboo(self, colour, length, improvement):
+        '''returns true if a bamboo of specific colour, length or improvement is in the board'''
+        for i in self.hash_table:
+            tile = self.hash_table[i]
+            if tile.colour == colour:
+                if tile.bamboo_amount == length:
+                    if improvement is not None: #Ie cares about improvement
+                        if improvement == "None": #Ie can't have an improvement
+                            if tile.improvement is None:
+                                return True
+                        else:
+                            if tile.improvement == improvement:
+                                return True
+        return False
