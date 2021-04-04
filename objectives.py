@@ -1,6 +1,8 @@
 import pygame
 import config as c
 from button import Button
+from board import Board
+from plots import Plot
 
 class Hand(pygame.sprite.Sprite):
     def __init__(self, game):
@@ -37,17 +39,20 @@ class Hand(pygame.sprite.Sprite):
 class Objective(pygame.sprite.Sprite):
     def __init__(self, hand, points):
         '''hand = None if not in a hand'''
+        super().__init__()
         self.hand = hand
         self.points = points
 
+        self.surface = None
+
         self.button = Button('Place', 0, 0, 70, 30, self.complete)
+        self.update_surface()
     
     def create_surface(self):
         self.surface = pygame.surface.Surface((c.objective_width, c.objective_height))
         self.surface.fill(c.objective_colour)
 
     def draw(self, surface, coords):
-        self.update_surface()
         surface.blit(self.surface, coords)
 
         self.button.move_to(coords[0] + 5, coords[1] + 5)
@@ -74,8 +79,8 @@ class Objective(pygame.sprite.Sprite):
 
 class Panda(Objective):
     def __init__(self, points, bamboo, hand):
-        super().__init__(hand, points)
         self.bamboo = bamboo
+        super().__init__(hand, points)
     
     def valid(self):
         current_player = self.hand.game.current_player
@@ -83,7 +88,7 @@ class Panda(Objective):
             return True
         return False
 
-    def update_surface(self):
+    def update_surface(self): #This is to add onto the plain surface that is already there (ie add the bamboo)
         self.create_surface()
 
         for index, i in enumerate(self.bamboo):
@@ -93,9 +98,22 @@ class Panda(Objective):
 
 class Gardener(Objective):
     def __init__(self, points, bamboo, hand):
-        super().__init__(hand, points)
         self.bamboo = bamboo
+        super().__init__(hand, points)
     
     def valid(self):
         board = self.hand.game.board
+        for i in self.bamboo:
+            if board.search_bamboo(i[0], i[1], i[2]) is False:
+                return False
+        return True
+    
+    def update_surface(self):
+        self.create_surface()
+        
+        for index, i in enumerate(self.bamboo):
+            board = Board(30, (c.objective_width / 2, c.objective_height / 2))
+            board.place(Plot(0, 0, i[0], board, i[2]))
+            board.hash_table[(0, 0)].bamboo_amount = i[1]
+            board.draw(self.surface)
         

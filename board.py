@@ -1,6 +1,6 @@
 import pygame
 from coordinates import Cartesian
-from plots import Plot, TempTile, Pond, Tile
+from plots import Plot, TempTile, Pond
 from rivers import RiverSystem
 
 class Board(pygame.sprite.Sprite): #JUST A GENERAL BOARD - could be for plot objective cards(?)
@@ -99,7 +99,7 @@ class MainBoard(Board): #THE MAIN BOARD WHICH IS FOR EVERYTHING
         
         try:
             return_val = self.highlight_tiles(self.temp_table)
-        except:
+        except LookupError: #If there is a problem with 'highlight tiles' - typically at edge cases (ie someone clicked on a tile but didnt release etc.)
             self.hovered_tiles = []
             self.clicked_tiles = []
             self.temp_table = {}

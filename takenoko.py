@@ -112,7 +112,7 @@ class Game:
         self.place_tile_button = Button('place tile', 20, 365, 110, 30, self.b_place_tile)
         self.place_tile_button.add(self.objects)
 
-        self.check_bamboo_button = Button('place bamboo', 20, 365+50, 120, 30, self.b_check_bamboo)
+        self.check_bamboo_button = Button('check bamboo', 20, 365+50, 120, 30, self.b_check_bamboo)
         self.check_bamboo_button.add(self.objects)
 
     def create_board(self):
@@ -133,7 +133,7 @@ class Game:
 
         self.pile_tiles = Pile(data["tiles"]).shuffle() #For placing tiles
         self.pile_objectives["panda"] = Pile(data["objectives"]["panda"]).shuffle()
-        self.pile_objectives["gardener"]  = Pile(data["objectives"]["gardener"]).shuffle()
+        self.pile_objectives["gardener"] = Pile(data["objectives"]["gardener"]).shuffle()
         self.pile_objectives["plots"]  = Pile(data["objectives"]["plots"]).shuffle() #For the 'plot' objectives
 
     # -- BUTTON PRESSED --
@@ -184,7 +184,7 @@ class Game:
         self.board.place(Plot(-1, 1, 'green', self.board))
         self.board.place(Plot(0, -1, 'yellow', self.board))
         self.board.place(Plot(-1, 0, 'yellow', self.board))
-        self.board.place(Plot(1, 0, 'pink', self.board))
+        self.board.place(Plot(1, 0, 'pink', self.board, 'irrigation'))
         self.board.place(Plot(1, -1, 'pink', self.board))
 
         #self.players[0].hand.add_objective(Objective(self.players[0].hand))
@@ -202,18 +202,18 @@ class Game:
             if self.game_state == 'grow':
                 selected_tile = self.board.select_tile()
                 if selected_tile:
-                    selected_tile.add_bamboo(1)
+                    selected_tile.add_bamboo(2)
             elif self.game_state == 'add objective':
 
-                if not self.pile_objectives["panda"].empty(): #If the pile is not empty
+                if not self.pile_objectives["gardener"].empty(): #If the pile is not empty
                     if self.current_player.hand.full() is False:
-                        objective = self.pile_objectives["panda"].take()
+                        objective = self.pile_objectives["gardener"].take()
                         objective.assign_hand(self.current_player.hand)
                         self.current_player.hand.add_objective(objective)
                     else:
-                        print("your hand is full lol")
+                        print("your hand is full")
                 else:
-                    print('no more objectives lol')
+                    print('no more objectives')
                 
                 self.game_state = ''
 
@@ -241,6 +241,8 @@ class Game:
                 colour = input('colour:')
                 length = int(input('length:'))
                 improvement = input('improvement:')
+                if improvement == 'null':
+                    improvement = None
 
                 print(self.board.search_bamboo(colour, length, improvement))
                 self.game_state = ""

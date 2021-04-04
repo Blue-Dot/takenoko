@@ -1,6 +1,6 @@
 import random
 import config as c
-from objectives import Panda
+from objectives import Panda, Gardener
 from plots import FloatingPlot
 
 class Pile():
@@ -17,7 +17,8 @@ class Pile():
                 for i in default:
                     self.pile.append(Panda(i["points"], i["bamboo"], None))
             elif flavour == "GA": #Objective pile (for gardener objectives)
-                pass
+                for i in default:
+                    self.pile.append(Gardener(i["points"], i["bamboo"], None))
             elif flavour == "PL": #Objective pile (for plot objectives)
                 pass
             #self.pile = default

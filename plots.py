@@ -66,18 +66,21 @@ class Plot(Tile):
 
         self.is_irrigated = False
 
+        self.bamboo_width = round(self.board.size / 3.5)
+        self.bamboo_height = round(self.board.size / 4.7)
+
         self.bamboo_amount = 0
-        self.bamboo_surface = pygame.surface.Surface((c.bamboo_width, c.bamboo_height * c.max_bamboo))
+        self.bamboo_surface = pygame.surface.Surface((self.bamboo_width, self.bamboo_height * c.max_bamboo))
 
         self.bamboo_image = pygame.image.load(c.image_bamboo[self.colour_index])
-        self.bamboo_image = pygame.transform.scale(self.bamboo_image, (c.bamboo_width, c.bamboo_height))
+        self.bamboo_image = pygame.transform.scale(self.bamboo_image, (self.bamboo_width, self.bamboo_height))
 
         self.improvement = None
         if improvement is not None:
             self.add_improvement(improvement)
         
         #Check if I am next to a pond:
-        neighbours = self.neighbours(self.board) 
+        neighbours = self.neighbours(self.board)
         for i in neighbours:
             if isinstance(i, Pond):
                 self.irrigate() #Irrigate if next to a pond instance
@@ -91,19 +94,21 @@ class Plot(Tile):
 
     def create_bamboo_surface(self):
         #Clear bamboo surface:
-        self.bamboo_surface = pygame.surface.Surface((c.bamboo_width, c.bamboo_height * c.max_bamboo))
+        self.bamboo_surface = pygame.surface.Surface((self.bamboo_width, self.bamboo_height * c.max_bamboo))
 
         #Add bamboo to self.surface:
         for i in range(self.bamboo_amount):
             #Put the bamboo in the correct place on the surface:
-            self.bamboo_surface.blit(self.bamboo_image, (0, self.bamboo_surface.get_height() - ((i + 1) * c.bamboo_height)))
+            self.bamboo_surface.blit(self.bamboo_image, (0, self.bamboo_surface.get_height() - ((i + 1) * self.bamboo_height)))
 
         self.bamboo_surface.set_colorkey((0, 0, 0, 0)) # Makes sure that the transparent pixels aren't blit (there was a hole in the tiles otherwise)
 
-        self.surface.blit(self.bamboo_surface, (c.bamboo_location_x, c.bamboo_location_y))
+        bamboo_location_x = self.bamboo_width
+        bamboo_location_y = self.board.size - ((self.bamboo_height * c.max_bamboo) / 2)
+        self.surface.blit(self.bamboo_surface, (bamboo_location_x, bamboo_location_y))
 
     def draw_improvement_surface(self):
-        if self.improvement != None:
+        if self.improvement is not None:
             self.surface.blit(self.improvement_surface, (c.improvement_location_x, c.improvement_location_y))
 
     def add_improvement(self, improvement):

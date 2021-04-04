@@ -43,12 +43,12 @@
             {
                 "id": "GA1",
                 "points": 3,
-                "bamboo": [["green", 4, "irrigation"]] 
+                "bamboo": [["pink", 4, "irrigation"]] 
             },
             {
                 "id": "GA2",
                 "points": 4,
-                "bamboo": [["green", 3, null], ["green", 3, null], ["green", 3, null]]
+                "bamboo": [["yellow", 3, null]]
             }
         ],
         "plots": [

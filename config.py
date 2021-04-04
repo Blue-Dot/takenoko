@@ -36,15 +36,15 @@ button_click_colour = colours.CADETBLUE3
 
 hexagon_size = 70 #Radius (ie distance from point of hexagon to center)
 
-bamboo_height = 15
-bamboo_width = 20
+#bamboo_height = 15 these have been replaced with a ratio of 'hexagon_size'
+#bamboo_width = 20
 max_bamboo = 4
 
-bamboo_location_x = 20
-bamboo_location_y = hexagon_size - ((bamboo_height * max_bamboo) / 2)
+#bamboo_location_x = 20
+#bamboo_location_y = hexagon_size - ((bamboo_height * max_bamboo) / 2)
 
-improvements = ['irrigation', 'panda', 'gardener']
-improvement_images = ['images/improvements/irrigation.png', 'images/improvements/panda.png', 'images/improvements/gardener.png']
+improvements = ['irrigation', 'panda', 'gardener', 'None']
+improvement_images = ['images/improvements/irrigation.png', 'images/improvements/panda.png', 'images/improvements/gardener.png', 'images/improvements/None.png']
 improvement_size = round(hexagon_size / 5) #Diameter (consistent with hexagon size)
 improvement_location_x = round((sqrt(3) / 2) * (hexagon_size - improvement_size))
 improvement_location_y = 90
@@ -66,4 +66,4 @@ objective_spacing = 20
 objective_y = height - objective_height - objective_spacing
 objective_colour = colours.CADETBLUE4
 
-objective_bamboo_dimensions = (round((objective_width / 3)), round((objective_width / 3) / bamboo_width * bamboo_height))
+objective_bamboo_dimensions = (round((objective_width / 3)), round((objective_width / 3) / 20 * 15))
