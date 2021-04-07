@@ -103,17 +103,29 @@ class Gardener(Objective):
     
     def valid(self):
         board = self.hand.game.board
+        exclude = [] #These are the tiles that have allready been checked (ie if the objective has three bamboo, you must have three different tiles, and not just check one tile three times)
+
         for i in self.bamboo:
-            if board.search_bamboo(i[0], i[1], i[2]) is False:
+            if board.search_bamboo(i[0], i[1], i[2], exclude) is False:
                 return False
+            exclude.append(board.search_bamboo(i[0], i[1], i[2], exclude))
         return True
     
     def update_surface(self):
         self.create_surface()
         
+        board = Board(30, (c.objective_width / 2, c.objective_height / 2))
         for index, i in enumerate(self.bamboo):
-            board = Board(30, (c.objective_width / 2, c.objective_height / 2))
-            board.place(Plot(0, 0, i[0], board, i[2]))
-            board.hash_table[(0, 0)].bamboo_amount = i[1]
-            board.draw(self.surface)
+            #this governs how the plots are layed out - ie the first tile will be in 0, 0 etc.
+            if index == 0:
+                q, r = 0, 0
+            elif index == 1:
+                q, r = 0, 1
+            elif index == 2:
+                q, r = -1, 1
+            elif index == 3:
+                q, r = 2, -1
+            board.place(Plot(q, r, i[0], board, i[2]))
+            board.hash_table[(q, r)].bamboo_amount = i[1]
+        board.draw(self.surface)
         

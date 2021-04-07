@@ -246,6 +246,7 @@ class Game:
 
                 print(self.board.search_bamboo(colour, length, improvement))
                 self.game_state = ""
+
             self.draw()
 
             pygame.display.flip()

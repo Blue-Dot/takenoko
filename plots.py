@@ -109,15 +109,20 @@ class Plot(Tile):
 
     def draw_improvement_surface(self):
         if self.improvement is not None:
-            self.surface.blit(self.improvement_surface, (c.improvement_location_x, c.improvement_location_y))
+            improvement_location_x = round((sqrt(3) / 2) * (self.board.size - (self.board.size / 5)))
+            improvement_location_y = round(self.board.size * 1.29)
+            self.surface.blit(self.improvement_surface, (improvement_location_x, improvement_location_y))
 
     def add_improvement(self, improvement):
         '''improvement = 'irrigation', 'panda' or 'gardener/' '''
         self.improvement = improvement
         self.improvement_index = c.improvements.index(self.improvement)
-    
-        self.improvement_surface = pygame.image.load(c.improvement_images[self.improvement_index])
-        self.improvement_surface = pygame.transform.scale(self.improvement_surface, (round(c.improvement_size * sqrt(3)), c.improvement_size * 2))
+
+        if hasattr(self, 'board'): #if i have a board (ie im not a TempTile instance)
+            improvement_size = round(self.board.size / 5)
+
+            self.improvement_surface = pygame.image.load(c.improvement_images[self.improvement_index])
+            self.improvement_surface = pygame.transform.scale(self.improvement_surface, (round(improvement_size * sqrt(3)), improvement_size * 2))
 
         if improvement == 'irrigation':
             self.irrigate()

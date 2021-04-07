@@ -48,7 +48,7 @@
             {
                 "id": "GA2",
                 "points": 4,
-                "bamboo": [["yellow", 3, null]]
+                "bamboo": [["yellow", 3, null], ["yellow", 3, null], ["yellow", 3, null]]
             }
         ],
         "plots": [
