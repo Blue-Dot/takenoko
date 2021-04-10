@@ -25,6 +25,12 @@ class Axial:
         r = self.r + a.r
         return Axial(q, r)
     
+    def subtract(self, a):
+        '''Calculates the difference between two axial coordinates (ie the vector between them)'''
+        q = self.q - a.q
+        r = self.r - a.r
+        return Axial(q, r)
+
     def get_coords(self):
         return self.coords
 
@@ -116,4 +122,11 @@ d = b.difference(a)
 print(c.coords()) #Works :))
 print(d.coords())
 #These are the same (0, 0, 1) which means it works :)) yipee!
+
+
+a = Axial(1, 0)
+b = Axial(2, 0)
+c = a.subtract(b)
+print(c.q)
+print(c.r)
 '''

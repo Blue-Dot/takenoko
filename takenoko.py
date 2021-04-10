@@ -25,8 +25,9 @@ class Game:
 
         self.surface = pygame.display.set_mode((width, height))
 
-        self.background_image = self.tile_background(pygame.image.load(
-            c.background_image).convert())  # Generate background image by tiling pattern
+        self.background_image = self.tile_background(
+            pygame.image.load(c.background_image).convert()
+        )  # Generate background image by tiling pattern
         self.frame_rate = c.frame_rate
         self.objects = pygame.sprite.Group()  # All game objects
         self.is_game_running = True
@@ -36,7 +37,7 @@ class Game:
 
         # -- SPEFICIC TAKENOKO SETUP --
 
-        self.game_state = ""  # CURRENT GAME STATE(!!)
+        self.game_state = ''  # CURRENT GAME STATE(!!)
 
         self.players = [Player(self), Player(self)]
         self.current_player_number = 0
@@ -64,10 +65,17 @@ class Game:
                 # Blit the tile onto the correct spot
                 background.blit(
                     tile, (w * tile.get_width(), h * tile.get_height()))
-        pygame.draw.rect(background, c.top_bar_colour,
-                         pygame.Rect(0, 0, self.width, c.top_bar_height))
-        pygame.draw.rect(background, c.top_bar_outline_colour, pygame.Rect(
-            0, c.top_bar_height, self.width, c.top_bar_outline_thickness))
+        pygame.draw.rect(
+            background,
+            c.top_bar_colour,
+            pygame.Rect(0, 0, self.width, c.top_bar_height),
+        )
+        pygame.draw.rect(
+            background,
+            c.top_bar_outline_colour,
+            pygame.Rect(0, c.top_bar_height, self.width,
+                        c.top_bar_outline_thickness),
+        )
         return background
 
     def draw(self):
@@ -91,8 +99,13 @@ class Game:
         self.create_piles()
 
     def create_labels(self):
-        self.player_label = TextObject('Player: 1', c.player_label_colour, 10, (
-            c.top_bar_height - c.font_size)/2, c.font_size)  # Create text at top of screen saying 'player 1'
+        self.player_label = TextObject(
+            'Player: 1',
+            c.player_label_colour,
+            10,
+            (c.top_bar_height - c.font_size) / 2,
+            c.font_size,
+        )  # Create text at top of screen saying 'player 1'
         self.player_label.add(self.objects)
 
     def create_buttons(self):
@@ -100,7 +113,8 @@ class Game:
         self.quit_button.add(self.objects)
 
         self.add_objective_button = Button(
-            'add objective', 20, 65, 150, 30, self.b_add_objective)
+            'add objective', 20, 65, 150, 30, self.b_add_objective
+        )
         self.add_objective_button.add(self.objects)
 
         self.grow_button = Button('grow', 20, 65 + 50, 50, 30, self.b_grow)
@@ -111,23 +125,28 @@ class Game:
         self.next_turn_button.add(self.objects)
 
         self.panda_move_button = Button(
-            'move panda', 20, 165 + 50, 120, 30, self.b_panda_move)
+            'move panda', 20, 165 + 50, 120, 30, self.b_panda_move
+        )
         self.panda_move_button.add(self.objects)
 
         self.gardener_move_button = Button(
-            'move gardener', 20, 265, 150, 30, self.b_gardener_move)
+            'move gardener', 20, 265, 150, 30, self.b_gardener_move
+        )
         self.gardener_move_button.add(self.objects)
 
         self.place_river_button = Button(
-            'place rivers', 20, 265 + 50, 130, 30, self.b_place_river)
+            'place rivers', 20, 265 + 50, 130, 30, self.b_place_river
+        )
         self.place_river_button.add(self.objects)
 
         self.place_tile_button = Button(
-            'place tile', 20, 365, 110, 30, self.b_place_tile)
+            'place tile', 20, 365, 110, 30, self.b_place_tile
+        )
         self.place_tile_button.add(self.objects)
 
         self.check_bamboo_button = Button(
-            'check bamboo', 20, 365+50, 120, 30, self.b_check_bamboo)
+            'check bamboo', 20, 365 + 50, 120, 30, self.b_check_bamboo
+        )
         self.check_bamboo_button.add(self.objects)
 
     def create_board(self):
@@ -142,17 +161,17 @@ class Game:
         self.gardener.add(self.objects)
 
     def create_piles(self):
-        data_file = open("data.json", "r")
+        data_file = open('data.json', 'r')
         data = json.load(data_file)
         data_file.close()
 
-        self.pile_tiles = Pile(data["tiles"]).shuffle()  # For placing tiles
-        self.pile_objectives["panda"] = Pile(
-            data["objectives"]["panda"]).shuffle()
-        self.pile_objectives["gardener"] = Pile(
-            data["objectives"]["gardener"]).shuffle()
-        self.pile_objectives["plots"] = Pile(
-            data["objectives"]["plots"]).shuffle()  # For the 'plot' objectives
+        self.pile_tiles = Pile(data['tiles']).shuffle()  # For placing tiles
+        self.pile_objectives['panda'] = Pile(
+            data['objectives']['panda']).shuffle()
+        self.pile_objectives['gardener'] = Pile(
+            data['objectives']['gardener']).shuffle()
+        self.pile_objectives['plots'] = Pile(
+            data['objectives']['plots']).shuffle()  # For the 'plot' objectives
 
     # -- BUTTON PRESSED --
 
@@ -185,14 +204,15 @@ class Game:
             print('you have to place a tile now')
 
     def b_check_bamboo(self):
-        self.game_state = "check bamboo"
+        self.game_state = 'check bamboo'
 
     # -- GAME RULES --
 
     def next_turn(self):
         # Increase current_player_number by 1, but cycle it through the total number of players
-        self.current_player_number = (
-            self.current_player_number + 1) % (c.number_of_players)
+        self.current_player_number = (self.current_player_number + 1) % (
+            c.number_of_players
+        )
         self.current_player = self.players[self.current_player_number]
 
         self.player_label.new_text('Player: %s' %
@@ -211,7 +231,7 @@ class Game:
         # self.players[0].hand.add_objective(Objective(self.players[0].hand))
         # self.players[0].hand.add_objective(Objective(self.players[0].hand))
 
-        #self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
+        # self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
 
         while self.is_game_running:
             # Reset display by rendering the background image
@@ -228,13 +248,13 @@ class Game:
             elif self.game_state == 'add objective':
 
                 # If the pile is not empty
-                if not self.pile_objectives["plots"].empty():
+                if not self.pile_objectives['plots'].empty():
                     if self.current_player.hand.full() is False:
-                        objective = self.pile_objectives["plots"].take()
+                        objective = self.pile_objectives['plots'].take()
                         objective.assign_hand(self.current_player.hand)
                         self.current_player.hand.add_objective(objective)
                     else:
-                        print("your hand is full")
+                        print('your hand is full')
                 else:
                     print('no more objectives')
 
@@ -270,7 +290,7 @@ class Game:
                     improvement = None
 
                 print(self.board.search_bamboo(colour, length, improvement))
-                self.game_state = ""
+                self.game_state = ''
 
             self.draw()
 

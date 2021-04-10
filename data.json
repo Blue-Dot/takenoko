@@ -13,7 +13,7 @@
         {
             "id": "TI3",
             "colour": "pink",
-            "improvements": "irrigation"
+            "improvements": null
         },
         {
             "id": "TI4",
@@ -56,6 +56,16 @@
                 "id": "PL1",
                 "points": 3,
                 "tiles": [[[0, 0], "green"], [[0, 1], "pink"], [[1, 0], "pink"]]
+            },
+            {
+                "id": "PL2",
+                "points": 3,
+                "tiles": [[[0, 0], "green"], [[0, 1], "green"], [[1, 0], "green"]]
+            },
+            {
+                "id": "PL3",
+                "points": 3,
+                "tiles": [[[0, 0], "yellow"], [[0, 1], "yellow"], [[0, 2], "yellow"]]
             }
         ]
     }
