@@ -1,7 +1,7 @@
 import pygame
 import json
 
-#My imports
+# My imports
 import config as c
 from player import Player
 from text_object import TextObject
@@ -11,6 +11,7 @@ from board import MainBoard
 from characters import Panda, Gardener
 from objectives import Objective
 from piles import Pile
+
 
 class Game:
     def __init__(self, width, height):
@@ -24,17 +25,18 @@ class Game:
 
         self.surface = pygame.display.set_mode((width, height))
 
-        self.background_image = self.tile_background(pygame.image.load(c.background_image).convert()) #Generate background image by tiling pattern
+        self.background_image = self.tile_background(pygame.image.load(
+            c.background_image).convert())  # Generate background image by tiling pattern
         self.frame_rate = c.frame_rate
-        self.objects = pygame.sprite.Group() #All game objects
+        self.objects = pygame.sprite.Group()  # All game objects
         self.is_game_running = True
         self.clock = pygame.time.Clock()
 
         pygame.display.set_caption(c.caption)
 
-        # -- SPEFICIC TAKENOKO SETUP -- 
+        # -- SPEFICIC TAKENOKO SETUP --
 
-        self.game_state = "" #CURRENT GAME STATE(!!)
+        self.game_state = ""  # CURRENT GAME STATE(!!)
 
         self.players = [Player(self), Player(self)]
         self.current_player_number = 0
@@ -52,28 +54,33 @@ class Game:
         self.gardener = None
 
         self.create_game_objects()
-        
+
     def tile_background(self, tile):
-        #Tile background image and store in a surface
+        # Tile background image and store in a surface
         background = pygame.Surface((self.width, self.height))
-        for h in range(self.width + tile.get_width() - 1 // tile.get_width()): #This is ceiling division, just without importing 'math'
+        # This is ceiling division, just without importing 'math'
+        for h in range(self.width + tile.get_width() - 1 // tile.get_width()):
             for w in range(self.height + tile.get_height() - 1 // tile.get_height()):
-                background.blit(tile, (w * tile.get_width(), h * tile.get_height())) #Blit the tile onto the correct spot
-        pygame.draw.rect(background, c.top_bar_colour, pygame.Rect(0, 0, self.width, c.top_bar_height))
-        pygame.draw.rect(background, c.top_bar_outline_colour, pygame.Rect(0, c.top_bar_height, self.width, c.top_bar_outline_thickness))
+                # Blit the tile onto the correct spot
+                background.blit(
+                    tile, (w * tile.get_width(), h * tile.get_height()))
+        pygame.draw.rect(background, c.top_bar_colour,
+                         pygame.Rect(0, 0, self.width, c.top_bar_height))
+        pygame.draw.rect(background, c.top_bar_outline_colour, pygame.Rect(
+            0, c.top_bar_height, self.width, c.top_bar_outline_thickness))
         return background
 
     def draw(self):
         for spr in self.objects.sprites():
             spr.draw(self.surface)
-        
+
         self.current_player.draw(self.surface)
 
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.is_game_running = False
-        
+
     # -- OBJECT CREATION --
 
     def create_game_objects(self):
@@ -84,35 +91,43 @@ class Game:
         self.create_piles()
 
     def create_labels(self):
-        self.player_label = TextObject('Player: 1', c.player_label_colour, 10, (c.top_bar_height - c.font_size)/2, c.font_size) #Create text at top of screen saying 'player 1'
+        self.player_label = TextObject('Player: 1', c.player_label_colour, 10, (
+            c.top_bar_height - c.font_size)/2, c.font_size)  # Create text at top of screen saying 'player 1'
         self.player_label.add(self.objects)
 
     def create_buttons(self):
         self.quit_button = Button('quit', c.width - 55, 5, 50, 30, self.b_quit)
         self.quit_button.add(self.objects)
 
-        self.add_objective_button = Button('add objective', 20, 65, 150, 30, self.b_add_objective)
+        self.add_objective_button = Button(
+            'add objective', 20, 65, 150, 30, self.b_add_objective)
         self.add_objective_button.add(self.objects)
 
         self.grow_button = Button('grow', 20, 65 + 50, 50, 30, self.b_grow)
         self.grow_button.add(self.objects)
 
-        self.next_turn_button = Button('next turn', 20, 165, 90, 30, self.next_turn)
+        self.next_turn_button = Button(
+            'next turn', 20, 165, 90, 30, self.next_turn)
         self.next_turn_button.add(self.objects)
 
-        self.panda_move_button = Button('move panda', 20, 165 + 50, 120, 30, self.b_panda_move)
+        self.panda_move_button = Button(
+            'move panda', 20, 165 + 50, 120, 30, self.b_panda_move)
         self.panda_move_button.add(self.objects)
 
-        self.gardener_move_button = Button('move gardener', 20, 265, 150, 30, self.b_gardener_move)
+        self.gardener_move_button = Button(
+            'move gardener', 20, 265, 150, 30, self.b_gardener_move)
         self.gardener_move_button.add(self.objects)
 
-        self.place_river_button = Button('place rivers', 20, 265 + 50, 130, 30, self.b_place_river)
+        self.place_river_button = Button(
+            'place rivers', 20, 265 + 50, 130, 30, self.b_place_river)
         self.place_river_button.add(self.objects)
 
-        self.place_tile_button = Button('place tile', 20, 365, 110, 30, self.b_place_tile)
+        self.place_tile_button = Button(
+            'place tile', 20, 365, 110, 30, self.b_place_tile)
         self.place_tile_button.add(self.objects)
 
-        self.check_bamboo_button = Button('check bamboo', 20, 365+50, 120, 30, self.b_check_bamboo)
+        self.check_bamboo_button = Button(
+            'check bamboo', 20, 365+50, 120, 30, self.b_check_bamboo)
         self.check_bamboo_button.add(self.objects)
 
     def create_board(self):
@@ -131,10 +146,13 @@ class Game:
         data = json.load(data_file)
         data_file.close()
 
-        self.pile_tiles = Pile(data["tiles"]).shuffle() #For placing tiles
-        self.pile_objectives["panda"] = Pile(data["objectives"]["panda"]).shuffle()
-        self.pile_objectives["gardener"] = Pile(data["objectives"]["gardener"]).shuffle()
-        self.pile_objectives["plots"]  = Pile(data["objectives"]["plots"]).shuffle() #For the 'plot' objectives
+        self.pile_tiles = Pile(data["tiles"]).shuffle()  # For placing tiles
+        self.pile_objectives["panda"] = Pile(
+            data["objectives"]["panda"]).shuffle()
+        self.pile_objectives["gardener"] = Pile(
+            data["objectives"]["gardener"]).shuffle()
+        self.pile_objectives["plots"] = Pile(
+            data["objectives"]["plots"]).shuffle()  # For the 'plot' objectives
 
     # -- BUTTON PRESSED --
 
@@ -146,7 +164,7 @@ class Game:
 
     def b_grow(self):
         self.game_state = 'grow'
-    
+
     def b_panda_move(self):
         self.game_state = 'move panda'
 
@@ -172,13 +190,16 @@ class Game:
     # -- GAME RULES --
 
     def next_turn(self):
-        self.current_player_number = (self.current_player_number + 1) % (c.number_of_players) #Increase current_player_number by 1, but cycle it through the total number of players
+        # Increase current_player_number by 1, but cycle it through the total number of players
+        self.current_player_number = (
+            self.current_player_number + 1) % (c.number_of_players)
         self.current_player = self.players[self.current_player_number]
 
-        self.player_label.new_text('Player: %s' % str(self.current_player_number + 1))
+        self.player_label.new_text('Player: %s' %
+                                   str(self.current_player_number + 1))
 
     def run(self):
-        #For testing purposes (a sample map):
+        # For testing purposes (a sample map):
         self.board.place(Plot(1, 1, 'green', self.board, 'panda'))
         self.board.place(Plot(0, 1, 'green', self.board))
         self.board.place(Plot(-1, 1, 'green', self.board))
@@ -187,17 +208,18 @@ class Game:
         self.board.place(Plot(1, 0, 'pink', self.board, 'irrigation'))
         self.board.place(Plot(1, -1, 'pink', self.board))
 
-        #self.players[0].hand.add_objective(Objective(self.players[0].hand))
-        #self.players[0].hand.add_objective(Objective(self.players[0].hand))
+        # self.players[0].hand.add_objective(Objective(self.players[0].hand))
+        # self.players[0].hand.add_objective(Objective(self.players[0].hand))
 
         #self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
 
         while self.is_game_running:
-            self.surface.blit(self.background_image, (0, 0)) #Reset display by rendering the background image
+            # Reset display by rendering the background image
+            self.surface.blit(self.background_image, (0, 0))
 
             self.handle_events()
-            
-            #print(self.game_state)
+
+            # print(self.game_state)
 
             if self.game_state == 'grow':
                 selected_tile = self.board.select_tile()
@@ -205,7 +227,8 @@ class Game:
                     selected_tile.add_bamboo(2)
             elif self.game_state == 'add objective':
 
-                if not self.pile_objectives["plots"].empty(): #If the pile is not empty
+                # If the pile is not empty
+                if not self.pile_objectives["plots"].empty():
                     if self.current_player.hand.full() is False:
                         objective = self.pile_objectives["plots"].take()
                         objective.assign_hand(self.current_player.hand)
@@ -214,23 +237,25 @@ class Game:
                         print("your hand is full")
                 else:
                     print('no more objectives')
-                
+
                 self.game_state = ''
 
             elif self.game_state == 'move panda':
                 selected_tile = self.board.select_tile()
                 if selected_tile:
-                    if self.panda.move(selected_tile): #If it was a valid move
+                    if self.panda.move(selected_tile):  # If it was a valid move
                         bamboo = selected_tile.eat()
                         if bamboo is not False:
                             self.current_player.add_bamboo(bamboo)
-                        self.game_state = '' #Reset game state (panda has moved)
+                        # Reset game state (panda has moved)
+                        self.game_state = ''
             elif self.game_state == 'move gardener':
                 selected_tile = self.board.select_tile()
                 if selected_tile:
-                    if self.gardener.move(selected_tile): #If it was a valid move
+                    if self.gardener.move(selected_tile):  # If it was a valid move
                         selected_tile.grow(self.board)
-                        self.game_state = '' #Reset game state (gardener has moved)
+                        # Reset game state (gardener has moved)
+                        self.game_state = ''
             elif self.game_state == 'place river':
                 self.board.river_system.place_river()
             elif self.game_state == 'place tile':
@@ -252,6 +277,7 @@ class Game:
             pygame.display.flip()
             self.clock.tick(self.frame_rate)
         pygame.quit()
+
 
 Main_Game = Game(c.width, c.height)
 
