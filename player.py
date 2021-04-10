@@ -1,5 +1,6 @@
 from objectives import Hand, Objective
 
+
 class Player:
     def __init__(self, game):
         self.game = game
@@ -7,7 +8,7 @@ class Player:
 
         self.river_reserve = 0
         self.bamboo_reserve = []
-    
+
     def draw(self, surface):
         self.hand.draw(surface)
 
@@ -19,9 +20,9 @@ class Player:
 
     def add_bamboo(self, colour):
         self.bamboo_reserve.append(colour)
-    
+
     def trade_bamboo(self, bamboo):
-        '''check if bamboo (a list) is in reserve. removes bamboo if it is valid. returns boolean'''
+        """check if bamboo (a list) is in reserve. removes bamboo if it is valid. returns boolean"""
         reserve = self.bamboo_reserve.copy()
         for i in bamboo:
             if i in reserve:
