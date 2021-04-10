@@ -205,9 +205,9 @@ class Game:
                     selected_tile.add_bamboo(2)
             elif self.game_state == 'add objective':
 
-                if not self.pile_objectives["gardener"].empty(): #If the pile is not empty
+                if not self.pile_objectives["plots"].empty(): #If the pile is not empty
                     if self.current_player.hand.full() is False:
-                        objective = self.pile_objectives["gardener"].take()
+                        objective = self.pile_objectives["plots"].take()
                         objective.assign_hand(self.current_player.hand)
                         self.current_player.hand.add_objective(objective)
                     else:

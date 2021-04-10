@@ -3,6 +3,7 @@ import config as c
 from button import Button
 from board import Board
 from plots import Plot
+from plots import Tile
 
 class Hand(pygame.sprite.Sprite):
     def __init__(self, game):
@@ -82,7 +83,8 @@ class Panda(Objective):
         self.bamboo = bamboo
         super().__init__(hand, points)
     
-    def valid(self):
+    def valid(self) -> bool:
+        '''check if objective is valid'''
         current_player = self.hand.game.current_player
         if current_player.trade_bamboo(self.bamboo):
             return True
@@ -101,7 +103,8 @@ class Gardener(Objective):
         self.bamboo = bamboo
         super().__init__(hand, points)
     
-    def valid(self):
+    def valid(self) -> bool:
+        '''check if objective is valid'''
         board = self.hand.game.board
         exclude = [] #These are the tiles that have allready been checked (ie if the objective has three bamboo, you must have three different tiles, and not just check one tile three times)
 
@@ -129,3 +132,21 @@ class Gardener(Objective):
             board.hash_table[(q, r)].bamboo_amount = i[1]
         board.draw(self.surface)
         
+class Plots(Objective):
+    def __init__(self, points, pattern, hand):
+        self.pattern = pattern
+        super().__init__(hand, points)
+
+    def valid(self) -> bool:
+        '''check if objective is valid'''
+        board = self.hand.game.board
+        return board.search_plots(self.pattern)
+
+    def update_surface(self): #not actually update_surface by the way... it is only used in the creation of the surface, but too late to change it :b
+        self.create_surface()
+        
+        board = Board(15, (c.objective_width / 3, c.objective_height / 2))
+        for i in self.pattern:
+            board.place(Tile(i[0][0], i[0][1], i[1],  board))
+
+        board.draw(self.surface)
