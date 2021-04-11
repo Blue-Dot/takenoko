@@ -31,7 +31,7 @@ class Board(pygame.sprite.Sprite):  # JUST A GENERAL BOARD - could be for plot o
             self.temp_table[tile].draw(surface, self.size, self.center)
 
     def place(self, tile):  # Can't use 'add' because that's allready a method of pygame.sprite.Spirte which I am using - so I used 'place' instead
-        #coords = (tile.axial.q, tile.axial.r)
+        # coords = (tile.axial.q, tile.axial.r)
         if tile.axial.get_coords() in self.hash_table:
             # Tried to put a tile in a spot which allready had a tile
             raise Exception(
@@ -165,47 +165,77 @@ class MainBoard(Board):  # THE MAIN BOARD WHICH IS FOR EVERYTHING
     def search_plots(self, needle) -> bool:  # thank you freddie
         ''' needle in form of [[[0, 0], "green"], [[0, 1], "pink"], [[1, 0], "pink"]] - must be two or more plots '''
 
-        # base tile = ...
-        for i in needle:
-            if i[0] == [0, 0]:
-                base_tile = i[1]
-
-        if 'base_tile' not in locals():
-            raise Exception('plot objective card doesn\'t have a [0, 0] tile')
-
         # create vector pathway
-        path = [PlotVector(
-            Axial(needle[1][0][0], needle[1][0][1]), needle[1][1])]
+        path = VectorPath()
+        for i in needle:
+            path.add_vector(i)
 
-        for i in needle[2:]:
-            dest_coords = Axial(i[0][0], i[0][1])
-            vector = dest_coords.subtract(path[-1].coords)
-            path.append(PlotVector(vector, i[1]))
-
+        # create a list of all the posisble base tiles
+        base_tile_colour = path.base_tile()
         poss_base_tiles = []
-        for coords in self.hash_table:
-            if self.hash_table[coords].colour == base_tile:
-                poss_base_tiles.append(coords)
 
-        # works up to this point
+        for coords in self.hash_table:
+            if self.hash_table[coords].colour == base_tile_colour:
+                poss_base_tiles.append(Axial(coords[0], coords[1]))
+
+        # for i in path.path:
+        #    print(i['coords'].get_coords())
 
         # for correct colour tile in hash table:
-        #   rotate vector pathway or something?
-        #   tile irrigated?
-        #   tile correct colour
-        #   end of pathway?
-        #       return True
-        #   move to next one in pathway
+        for poss_base_tile in poss_base_tiles:
+            # print('poss_base_tile %s' % str(poss_base_tile.get_coords()))
+            for i in range(6):
+                path.rotate()
+                if self.test_path(path, poss_base_tile):
+                    return True
+        return False
+
+    def test_path(self, path, start):  # INCOMPLETE
+        pointer_location = start
+
+        for i in path.path:
+            pointer_location = pointer_location.sum(i['coords'])
+
+            # print(pointer_location.get_coords())
+
+            if pointer_location.get_coords() in self.hash_table:
+                current_tile = self.hash_table[pointer_location.get_coords()]
+            else:
+                return False
+
+            if current_tile.colour != i['colour']:
+                return False
+            if not current_tile.is_irrigated:  # can't be pond so this is okay
+                return False
 
         return True
 
 
-class PlotVector():
-    '''a link between a vector and plot colour - used in MainBoard.search_plots'''
+class VectorPath():
+    '''an ordered set of vectors describing how to get through the hole pattern - used in MainBoard.search_plots'''
 
-    def __init__(self, coords: Axial, colour: str):
-        self.coords = coords
-        self.colour = colour
+    def __init__(self):
+        self.path = []
+
+    def add_vector(self, tile: [[int, int], str]):
+        coord_q = tile[0][0]
+        coord_r = tile[0][1]
+        colour = tile[1]
+
+        if not self.path:  # If list is empty
+            self.path.append(
+                {'coords': Axial(coord_q, coord_r), 'colour': colour}
+            )
+        else:
+            self.path.append(
+                {'coords': Axial(coord_q, coord_r).subtract(self.path[-1]['coords']),
+                 'colour': colour}
+            )
 
     def rotate(self):  # INCOMPLETE
-        pass
+        for i in self.path:
+            i['coords'] = i['coords'].rotate(self.path[0]['coords'])
+
+    def base_tile(self):
+        '''returns the colour of the [0, 0] tile'''
+        return self.path[0]['colour']

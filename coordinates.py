@@ -1,30 +1,31 @@
 from math import sqrt
 
-#NOTE these coordinates are for hexagons/tiles. Ie. q + r + s = 0. They are not for rivers
+# NOTE these coordinates are for hexagons/tiles. Ie. q + r + s = 0. They are not for rivers
 
 # --> = q coordinate
 
-# \ 
+# \
 #  \  = r coordinate
 #   v
 
+
 class Axial:
     def __init__(self, q, r):
-        #q corresponds to x, r corresponds to z, s corresponds to y
+        # q corresponds to x, r corresponds to z, s corresponds to y
         self.q, self.r = q, r
         self.s = - q - r
         self.coords = (self.q, self.r)
-    
+
     def cartesian(self, size, center):
         x = ((self.q * sqrt(3)) + (self.r * (sqrt(3)/2))) * size
         y = (self.r * (3/2)) * size
         return (round(x + center[0]), round(y + center[1]))
 
-    def sum(self, a): #Sum two axial coordinates together
+    def sum(self, a):  # Sum two axial coordinates together
         q = self.q + a.q
         r = self.r + a.r
         return Axial(q, r)
-    
+
     def subtract(self, a):
         '''Calculates the difference between two axial coordinates (ie the vector between them)'''
         q = self.q - a.q
@@ -34,21 +35,29 @@ class Axial:
     def get_coords(self):
         return self.coords
 
-class Cartesian(Axial): #Primarily for mouse... TESTED - works!
+    def rotate(self, a):  # TESTED
+        '''rotate self 60º clockwise about a'''
+        b = self.subtract(a)
+        return Axial(-b.r, -b.s).sum(a)
+
+
+class Cartesian(Axial):  # Primarily for mouse... TESTED - works!
     def __init__(self, x, y, size, center):
-        #Makes x and y relative to the center
+        # Makes x and y relative to the center
         x = x - center[0]
         y = y - center[1]
 
-        #Converts x and y to q, r and s
-        q = (sqrt(3)/3 * x  -  1/3 * y) / size
+        # Converts x and y to q, r and s
+        q = (sqrt(3)/3 * x - 1/3 * y) / size
         r = (2/3 * y) / size
         s = -q-r
 
-        q, r, s = self.cube_round(q, r, s) #Rounds to the nearest hexagon where q + r + s = 0
+        # Rounds to the nearest hexagon where q + r + s = 0
+        q, r, s = self.cube_round(q, r, s)
         super().__init__(q, r)
 
-    def cube_round(self, x, y, z): #CREDIT: 'https://www.redblobgames.com/grids/hexagons/#pixel-to-hex'
+    # CREDIT: 'https://www.redblobgames.com/grids/hexagons/#pixel-to-hex'
+    def cube_round(self, x, y, z):
         rx = round(x)
         ry = round(y)
         rz = round(z)
@@ -63,11 +72,12 @@ class Cartesian(Axial): #Primarily for mouse... TESTED - works!
             ry = -rx-rz
         else:
             rz = -rx-ry
-        
+
         return rx, ry, rz
 
 # ~ RIVER COORDINATES ~
 # Ie. q + r + s != 0
+
 
 class Cubic:
     def __init__(self, x, y, z):
@@ -89,7 +99,7 @@ class Cubic:
         return Cubic(x, y, z)
 
     def cartesian(self, size, center):
-        '''Returns the cartesian form of this object''' 
+        '''Returns the cartesian form of this object'''
         cart_x = ((sqrt(3) / 2) * (self.x - self.y)) * size
         cart_y = ((1/2) * (- self.x - self.y) + self.z) * size
         return (round(cart_x + center[0]), round(cart_y + center[1]))
@@ -97,15 +107,17 @@ class Cubic:
     def coords(self):
         return (self.x, self.y, self.z)
 
-    def get_coords(self): #Alias for self.coords
+    def get_coords(self):  # Alias for self.coords
         return self.coords()
 
     def axial(self):
         if self.x + self.y + self.z == 0:
             return Axial(self.x, self.z)
-        raise Exception("Silly Max, you attempted to turn a Cubic object into an Axial object where x + y + z != 0")
+        raise Exception(
+            "Silly Max, you attempted to turn a Cubic object into an Axial object where x + y + z != 0")
 
-#TESTING:
+
+# TESTING:
 '''
 a = Axial(0, 0)
 c = Axial(1, 1)
@@ -129,4 +141,19 @@ b = Axial(2, 0)
 c = a.subtract(b)
 print(c.q)
 print(c.r)
+
+#rotation test
+a = Axial(1, 2)
+a = a.rotate(Axial(0, 0))
+print(a.q, a.r)
+a = a.rotate(Axial(0, 0))
+print(a.q, a.r)
+a = a.rotate(Axial(0, 0))
+print(a.q, a.r)
+a = a.rotate(Axial(0, 0))
+print(a.q, a.r)
+a = a.rotate(Axial(0, 0))
+print(a.q, a.r)
+a = a.rotate(Axial(0, 0))
+print(a.q, a.r)
 '''

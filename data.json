@@ -2,22 +2,22 @@
     "tiles": [
         {
             "id": "TI1",
-            "colour": "pink",
+            "colour": "yellow",
             "improvements": null
         },
         {
             "id": "TI2",
-            "colour": "pink",
+            "colour": "yellow",
             "improvements": "gardener"
         },
         {
             "id": "TI3",
-            "colour": "pink",
+            "colour": "yellow",
             "improvements": null
         },
         {
             "id": "TI4",
-            "colour": "green",
+            "colour": "yellow",
             "improvements": null
         },
         {

@@ -15,7 +15,7 @@ image_tiles_click = ['images/tiles/green_click.png', 'images/tiles/yellow_click.
 image_bamboo = ['images/bamboo/green.png', 'images/bamboo/yellow.png', 'images/bamboo/pink.png']
 
 width, height = 1400, 800
-board_center = (width / 2, height / 2)
+board_center = (width / 2, height / 3)
 
 number_of_players = 2
 
