@@ -1,28 +1,13 @@
 {
     "tiles": [
         {
-            "id": "TI1",
-            "colour": "yellow",
-            "improvements": null
-        },
-        {
-            "id": "TI2",
-            "colour": "yellow",
-            "improvements": "gardener"
-        },
-        {
-            "id": "TI3",
-            "colour": "yellow",
-            "improvements": null
-        },
-        {
             "id": "TI4",
-            "colour": "yellow",
+            "colour": "green",
             "improvements": null
         },
         {
             "id": "TI5",
-            "colour": "yellow",
+            "colour": "green",
             "improvements": "panda"
         }
     ],

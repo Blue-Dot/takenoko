@@ -11,6 +11,7 @@ from board import MainBoard
 from characters import Panda, Gardener
 from objectives import Objective
 from piles import Pile
+from weather import WeatherDice
 
 
 class Game:
@@ -96,6 +97,7 @@ class Game:
         self.create_buttons()
         self.create_board()
         self.create_characters()
+        self.create_weather()
         self.create_piles()
 
     def create_labels(self):
@@ -145,9 +147,13 @@ class Game:
         self.place_tile_button.add(self.objects)
 
         self.check_bamboo_button = Button(
-            'check bamboo', 20, 365 + 50, 120, 30, self.b_check_bamboo
+            'check bamboo', 20, 365 + 50, 150, 30, self.b_check_bamboo
         )
         self.check_bamboo_button.add(self.objects)
+
+        self.roll_dice_button = Button(
+            'roll die', 20, 465, 80, 30, self.b_roll_dice)
+        self.roll_dice_button.add(self.objects)
 
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, c.board_center)
@@ -159,6 +165,10 @@ class Game:
         self.gardener = Gardener(c.hexagon_size, c.board_center)
         self.panda.add(self.objects)
         self.gardener.add(self.objects)
+
+    def create_weather(self):
+        self.dice = WeatherDice()
+        self.dice.add(self.objects)
 
     def create_piles(self):
         data_file = open('data.json', 'r')
@@ -205,6 +215,10 @@ class Game:
 
     def b_check_bamboo(self):
         self.game_state = 'check bamboo'
+
+    def b_roll_dice(self):
+        print('rolling the dice...')
+        print(self.dice.roll())
 
     # -- GAME RULES --
 
