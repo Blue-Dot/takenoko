@@ -52,6 +52,8 @@ class Game:
         self.pile_tiles = None
         self.pile_objectives = {}
 
+        self.menu = None
+
         self.panda = None
         self.board = None
         self.gardener = None
@@ -59,7 +61,7 @@ class Game:
         self.create_game_objects()
 
     def tile_background(self, tile):
-        # Tile background image and store in a surface
+        ''' Tile background image and store in a surface '''
         background = pygame.Surface((self.width, self.height))
         # This is ceiling division, just without importing 'math'
         for h in range(self.width + tile.get_width() - 1 // tile.get_width()):

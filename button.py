@@ -61,9 +61,11 @@ class Toggle(Button):
         if self.state is True:
             self.state = False
             self.colour = c.button_colour
+            self.hover_colour = c.button_hover_colour
         else:
             self.state = True
             self.colour = c.toggle_selected_colour
+            self.hover_colour = c.toggle_hover_selected_colour
 
         self.create_surface(self.colour, self.text_colour)
 

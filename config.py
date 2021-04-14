@@ -87,4 +87,5 @@ choose_menu_height = 250
 shadow_colour = colours.GRAY10
 toggle_width = 50
 
-toggle_selected_colour = colours.GREEN2
+toggle_selected_colour = colours.GREEN1
+toggle_hover_selected_colour = colours.GREEN2
