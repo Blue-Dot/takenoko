@@ -13,9 +13,12 @@ class WeatherDice(pygame.sprite.Sprite):
         self.create_sides()
         self.side = 6
 
+        self.start_time = -1  # time in ms when roll started
+        self.rolls = 0
+
     def create_sides(self):
         for i in range(7):
-            surface = pygame.image.load(c.weather_images[i])
+            surface = pygame.image.load(c.weather_images[i]).convert_alpha()
             surface = pygame.transform.scale(
                 surface, (c.weather_size, c.weather_size))
             self.surfaces.append(surface)
@@ -27,3 +30,21 @@ class WeatherDice(pygame.sprite.Sprite):
         '''rolls the dice, returns: Sun, 1 = Rain, 2 = Wind, 3 = Storm, 4 = Clouds, 5 = Choice'''
         self.side = random.randint(0, 5)
         return self.side
+
+    def throw(self):
+        '''rolls the dice 5 times, and returns side when finished'''
+        if self.start_time == -1:
+            # first call of 'throw'
+            self.start_time = pygame.time.get_ticks()
+            self.rolls = 0
+
+        print((pygame.time.get_ticks() - self.start_time))
+
+        if (pygame.time.get_ticks() - self.start_time) // 200 > self.rolls:
+            self.rolls += 1
+            self.roll()
+
+        if self.rolls > 5:
+            # finished rolling
+            self.start_time = -1
+            return self.side

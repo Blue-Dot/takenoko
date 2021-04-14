@@ -12,6 +12,7 @@ from characters import Panda, Gardener
 from objectives import Objective
 from piles import Pile
 from weather import WeatherDice
+from choose_menu import ChooseMenu, MenuItem
 
 
 class Game:
@@ -155,6 +156,10 @@ class Game:
             'roll die', 20, 465, 80, 30, self.b_roll_dice)
         self.roll_dice_button.add(self.objects)
 
+        self.open_menu_button = Button(
+            'open menu', 20, 465 + 50, 110, 30, self.b_open_menu)
+        self.open_menu_button.add(self.objects)
+
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, c.board_center)
         self.board.place(Pond(0, 0, self.board))
@@ -217,8 +222,13 @@ class Game:
         self.game_state = 'check bamboo'
 
     def b_roll_dice(self):
-        print('rolling the dice...')
-        print(self.dice.roll())
+        self.game_state = 'throwing dice'
+
+    def b_open_menu(self):
+        self.menu = ChooseMenu([MenuItem(pygame.image.load(c.image_tiles[0])), MenuItem(
+            pygame.image.load(c.image_tiles[0])), MenuItem(pygame.image.load(c.image_tiles[1]))], 'choose plot')
+        self.menu.add(self.objects)
+        self.game_state = 'choose menu'
 
     # -- GAME RULES --
 
@@ -305,7 +315,17 @@ class Game:
 
                 print(self.board.search_bamboo(colour, length, improvement))
                 self.game_state = ''
-
+            elif self.game_state == 'throwing dice':
+                roll = self.dice.roll()
+                if roll:
+                    self.game_state = ''
+            elif self.game_state == 'choose menu':
+                update = self.menu.update()
+                if update:
+                    print(update)
+                    self.game_state = ''
+                    self.menu.remove(self.objects)
+                    self.menu = None  # garbage collector should clean this up and delete the object
             self.draw()
 
             pygame.display.flip()

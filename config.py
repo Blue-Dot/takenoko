@@ -79,6 +79,12 @@ objective_bamboo_dimensions = (
 
 weather_images = ['images/weather/sun.png', 'images/weather/rain.png', 'images/weather/wind.png',
                   'images/weather/storm.png', 'images/weather/clouds.png', 'images/weather/choice.png', 'images/weather/none.png']
-weather_size = 50
-weather_x = 100
-weather_y = 100
+weather_size = 70
+weather_x = width - weather_size - 20
+weather_y = top_bar_height + 20
+
+choose_menu_height = 250
+shadow_colour = colours.GRAY10
+toggle_width = 50
+
+toggle_selected_colour = colours.GREEN2
