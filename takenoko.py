@@ -6,13 +6,14 @@ import config as c
 from player import Player
 from text_object import TextObject
 from button import Button
-from plots import Pond, Plot, FloatingPlot
+from plots import Pond, Plot
 from board import MainBoard
 from characters import Panda, Gardener
-from objectives import Objective
+#from objectives import Objective
 from piles import Pile
 from weather import WeatherDice
 from choose_menu import ChooseMenu, MenuItem
+from player_info import PlayerInfo
 
 
 class Game:
@@ -102,6 +103,7 @@ class Game:
         self.create_characters()
         self.create_weather()
         self.create_piles()
+        self.create_player_info()
 
     def create_labels(self):
         self.player_label = TextObject(
@@ -162,6 +164,9 @@ class Game:
             'open menu', 20, 465 + 50, 110, 30, self.b_open_menu)
         self.open_menu_button.add(self.objects)
 
+        self.add_river_button = Button('add river', 20, 565, 120, 30, self.b_add_river)
+        self.add_river_button.add(self.objects)
+
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, c.board_center)
         self.board.place(Pond(0, 0, self.board))
@@ -189,6 +194,10 @@ class Game:
             data['objectives']['gardener']).shuffle()
         self.pile_objectives['plots'] = Pile(
             data['objectives']['plots']).shuffle()  # For the 'plot' objectives
+
+    def create_player_info(self):
+        self.player_info = PlayerInfo(self.current_player, 0, 0)
+        self.player_info.add(self.objects)
 
     # -- BUTTON PRESSED --
 
@@ -228,9 +237,12 @@ class Game:
 
     def b_open_menu(self):
         self.menu = ChooseMenu([MenuItem(pygame.image.load(c.image_tiles[0])), MenuItem(
-            pygame.image.load(c.image_tiles[0])), MenuItem(pygame.image.load(c.image_tiles[1]))], 'choose plot')
+            pygame.image.load(c.image_tiles[0])), MenuItem(pygame.image.load(c.image_tiles[1]))], 'choose plot', number=2)
         self.menu.add(self.objects)
         self.game_state = 'choose menu'
+
+    def b_add_river(self):
+        self.current_player.river_reserve += 1
 
     # -- GAME RULES --
 

@@ -1,4 +1,4 @@
-from objectives import Hand, Objective
+from objectives import Hand
 
 
 class Player:
@@ -8,6 +8,19 @@ class Player:
 
         self.river_reserve = 0
         self.bamboo_reserve = []
+
+        self.points = 0
+        self.turn_state = ''
+        # - weather
+        # - action:
+        #   - plot
+        #   - river
+        #   - gardener
+        #   - panda
+        #   - objective
+        # - place:
+        #   - river
+        #   - improvement
 
     def draw(self, surface):
         self.hand.draw(surface)
@@ -35,3 +48,8 @@ class Player:
 
     def complete_objective(self, objective):
         pass
+
+    def turn(self):
+        if self.turn_state == 'weather':
+            pass
+        # elif etc.
