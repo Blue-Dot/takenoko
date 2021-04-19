@@ -45,10 +45,12 @@ class Game:
         self.players = [Player(self), Player(self)]
         self.current_player_number = 0
         self.current_player = self.players[self.current_player_number]
+        self.current_player.start_turn()
 
         # -- GAME OBJECTS --
 
         self.player_label = None
+        self.player_info = []
 
         self.pile_tiles = None
         self.pile_objectives = {}
@@ -164,7 +166,8 @@ class Game:
             'open menu', 20, 465 + 50, 110, 30, self.b_open_menu)
         self.open_menu_button.add(self.objects)
 
-        self.add_river_button = Button('add river', 20, 565, 120, 30, self.b_add_river)
+        self.add_river_button = Button(
+            'add river', 20, 565, 120, 30, self.b_add_river)
         self.add_river_button.add(self.objects)
 
     def create_board(self):
@@ -196,8 +199,10 @@ class Game:
             data['objectives']['plots']).shuffle()  # For the 'plot' objectives
 
     def create_player_info(self):
-        self.player_info = PlayerInfo(self.current_player, 0, 0)
-        self.player_info.add(self.objects)
+        for index, i in enumerate(self.players):
+            self.player_info.append(PlayerInfo(
+                i, c.width - c.player_info_width - 20, (index * (c.player_info_height + 20)) + 60))
+            self.player_info[-1].add(self.objects)
 
     # -- BUTTON PRESSED --
 
@@ -248,6 +253,8 @@ class Game:
 
     def next_turn(self):
         # Increase current_player_number by 1, but cycle it through the total number of players
+        self.current_player.finish_turn()
+
         self.current_player_number = (self.current_player_number + 1) % (
             c.number_of_players
         )
@@ -255,6 +262,8 @@ class Game:
 
         self.player_label.new_text('Player: %s' %
                                    str(self.current_player_number + 1))
+
+        self.current_player.start_turn()
 
     def run(self):
         # For testing purposes (a sample map):

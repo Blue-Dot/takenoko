@@ -4,6 +4,7 @@ from button import Button
 from board import Board
 from plots import Plot
 from plots import Tile
+from text_object import TextObject
 
 
 class Hand(pygame.sprite.Sprite):
@@ -58,6 +59,10 @@ class Objective(pygame.sprite.Sprite):
         self.surface = pygame.surface.Surface(
             (c.objective_width, c.objective_height))
         self.surface.fill(c.objective_colour)
+
+        points = TextObject(str(self.points), c.button_text_colour,
+                            c.objective_width - 15, c.objective_height - 25, 20)
+        points.draw(self.surface)
 
     def draw(self, surface, coords):
         surface.blit(self.surface, coords)

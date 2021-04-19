@@ -8,9 +8,11 @@ class Player:
 
         self.river_reserve = 0
         self.bamboo_reserve = []
+        self.improvement_reserve = []
+
+        self.turn = False  # is it my turn?
 
         self.points = 0
-        self.turn_state = ''
         # - weather
         # - action:
         #   - plot
@@ -47,9 +49,10 @@ class Player:
         return True
 
     def complete_objective(self, objective):
-        pass
+        self.points += objective.points
 
-    def turn(self):
-        if self.turn_state == 'weather':
-            pass
-        # elif etc.
+    def start_turn(self):
+        self.turn = True
+
+    def finish_turn(self):
+        self.turn = False

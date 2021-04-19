@@ -91,4 +91,4 @@ toggle_selected_colour = colours.GREEN1
 toggle_hover_selected_colour = colours.GREEN2
 
 player_info_height = 200
-player_info_width = 370
+player_info_width = 350
