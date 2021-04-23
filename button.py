@@ -71,3 +71,26 @@ class Toggle(Button):
 
     def get_state(self):
         return self.state
+
+
+class ButtonSystem(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.coords = pygame.rect.Rect((x, y), (0, 0))
+        self.buttons = {}
+
+    def draw(self, surface):
+        buttons = self.buttons.copy() # this is needed because self.buttons can change during 'run' (ie if a button is deleted)
+        for i in buttons:
+            self.buttons[i].draw(surface)
+
+    def add_button(self, button, name):
+        '''add a button to the button system'''
+        button.move_to(self.coords.x, self.coords.y + 50 * len(self.buttons))
+        self.buttons[name] = button
+
+    def remove(self, name):
+        del self.buttons[name]
+
+        for index, i in enumerate(self.buttons):
+            self.buttons[i].move_to(self.coords.x, self.coords.y + 50 * index)

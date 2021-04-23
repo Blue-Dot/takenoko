@@ -38,7 +38,7 @@ class PlayerInfo(pygame.sprite.Sprite):
 
     def draw(self, surface):
         self.update()
-        #self.create_surface()
+        # self.create_surface()
         self.objects.draw(self.surface)
         surface.blit(self.surface, self.coords)
 
@@ -50,13 +50,10 @@ class PlayerInfo(pygame.sprite.Sprite):
         self.bamboo_object.new_text('Green: %i • Yellow: %i • Pink: %i' % (
             bamboo['green'], bamboo['yellow'], bamboo['pink']))
 
-        improvements = Counter(self.player.improvement_reserve)
-        self.improvements_object.new_text('Panda: %i • Irrigation: %i • Growth: %i' % (
-            improvements['panda'], improvements['irrigation'],  improvements['bamboo']))
+        self.improvements_object.new_text('Irrigation: %i • Panda: %i • Growth: %i' % (
+            self.player.improvement_reserve[0], self.player.improvement_reserve[1], self.player.improvement_reserve[2]))
 
         if self.player.turn:
             self.surface.fill(colours.DARKSLATEBLUE)
         else:
             self.surface.fill(c.objective_colour)
-
-    

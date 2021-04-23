@@ -8,24 +8,17 @@ class Player:
 
         self.river_reserve = 0
         self.bamboo_reserve = []
-        self.improvement_reserve = []
+        self.improvement_reserve = {0: 0, 1: 0, 2: 0} #1 = irrigation, 2 = panda, 3 = gardener
 
         self.turn = False  # is it my turn?
 
         self.points = 0
-        # - weather
-        # - action:
-        #   - plot
-        #   - river
-        #   - gardener
-        #   - panda
-        #   - objective
-        # - place:
-        #   - river
-        #   - improvement
 
     def draw(self, surface):
         self.hand.draw(surface)
+
+    def add_river(self, num):
+        self.river_reserve += num
 
     def remove_river(self):
         if self.river_reserve > 0:
@@ -56,3 +49,6 @@ class Player:
 
     def finish_turn(self):
         self.turn = False
+
+    def add_improvement(self, improvement):
+        self.improvement_reserve[improvement] += 1

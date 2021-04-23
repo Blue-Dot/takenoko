@@ -48,3 +48,7 @@ class WeatherDice(pygame.sprite.Sprite):
             # finished rolling
             self.start_time = -1
             return self.side
+
+    def update(self, new_weather):
+        '''if you need to update the die, for example if a new weather is chosen'''
+        self.side = new_weather
