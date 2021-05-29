@@ -7,7 +7,7 @@ from player import Player
 from text_object import TextObject
 from button import Button, ButtonSystem
 from plots import Pond, Plot
-from board import MainBoard
+from board import MainBoard, Board
 from characters import Panda, Gardener
 #from objectives import Objective
 from piles import Pile
@@ -57,12 +57,16 @@ class Game:
         self.player_info = []
 
         self.quit_button = None
+        # The buttons on the left hand side of the screen (to choose items)
         self.button_system = None
 
         self.pile_tiles = None
         self.pile_objectives = {}
         self.pile_improvements = {}
         self.pile_rivers = 20  # Remember that there are a finite number of rivers
+        # The top cards if the user is given a choice (ie to be put at the bottom of the pile)
+        self.top_cards = []
+        self.to_place = None  # A card for the user to place
 
         self.improvement_link = {}
 
@@ -139,7 +143,7 @@ class Game:
         self.button_system.add(self.objects)
 
         self.button_system.add_button(
-            Button('next turn', 0, 0, 100, 30, self.next_turn), 'next turn')
+            Button('next turn', 0, 0, 100, 30, self.next_turn))
 
         '''
         self.add_objective_button = Button(
@@ -238,6 +242,7 @@ class Game:
     def b_quit(self):
         self.is_game_running = False
 
+    '''
     def b_add_objective(self):
         self.game_state = 'add objective'
 
@@ -265,10 +270,12 @@ class Game:
 
     def b_check_bamboo(self):
         self.game_state = 'check bamboo'
+    '''
 
     def roll_dice(self):
         return self.dice.roll()
 
+    '''
     def b_open_menu(self):
         self.menu = ChooseMenu([MenuItem(pygame.image.load(c.image_tiles[0])), MenuItem(
             pygame.image.load(c.image_tiles[0])), MenuItem(pygame.image.load(c.image_tiles[1]))], 'choose plot', number=2)
@@ -277,6 +284,7 @@ class Game:
 
     def b_add_river(self):
         self.current_player.river_reserve += 1
+    '''
 
     # -- GAME RULES --
 
@@ -324,40 +332,51 @@ class Game:
             self.menu = ChooseMenu(options, 'Choose 1 action')
         self.menu.add(self.objects)
 
-    def add_plot_button(self):
-        self.button_system.add_button(
-            Button('Add Plot', 0, 0, 80, 30, self.add_plot), 'add plot')
+    def create_action_button(self, name):
+        button_name = self.button_system.add_button(
+            Button(name.capitalize(), 0, 0, len(name) * 13, 30, self.do_action))
+        self.button_system.buttons[button_name].add_arguments(
+            (button_name, name))
 
-    def add_river(self):
-        self.current_player.add_river(1)
+    def do_action(self, args):
+        button_name = args[0]
+        turn_list_name = args[1]
+        self.button_system.disable()
+        self.button_system.remove(button_name)
+        self.turn_list.append(turn_list_name)
 
-    def add_gardener_button(self):
-        self.button_system.add_button(
-            Button('Move Gardener', 0, 0, 120, 30, self.move_gardener), 'move gardener')
-
-    def add_panda_button(self):
-        self.button_system.add_button(
-            Button('Move Panda', 0, 0, 110, 30, self.move_panda), 'move panda')
-
-    def add_objective_button(self):
-        self.button_system.add_button(
-            Button('Add Objective', 0, 0, 150, 30, self.add_objective), 'add objective')
-
-    def add_plot(self):
+    ''' def add_plot(self):
+        self.button_system.disable()
         self.button_system.remove('add plot')
         self.turn_list.append('objective choice menu')
 
     def move_gardener(self):
+        self.button_system.disable()
         self.button_system.remove('move gardener')
         self.turn_list.append('move gardener')
 
     def move_panda(self):
+        self.button_system.disable()
         self.button_system.remove('move panda')
         self.turn_list.append('move panda')
 
     def add_objective(self):
+        self.button_system.disable()
         self.button_system.remove('add objective')
-        self.turn_list.append('objective choice menu')
+        self.turn_list.append('objective choice menu')'''
+
+    def move_character(self, character, tile):
+        if character.move(tile):  # If it was a valid move
+            if isinstance(character, Panda):
+                bamboo = tile.eat()
+                if bamboo is not False:
+                    self.current_player.add_bamboo(bamboo)
+            else:  # character is gardener
+                tile.grow(self.board)
+
+            # Reset game state (character has moved)
+            del self.turn_list[-1]
+            self.button_system.enable()
 
     # -- MAIN LOOP --
 
@@ -478,12 +497,79 @@ class Game:
                         update = self.menu.update()
                         if update:
                             self.clear_menu()
-                            actions = {0: self.add_plot_button, 1: self.add_river, 2: self.add_gardener_button,
-                                       3: self.add_panda_button, 4: self.add_objective_button}
+                            actions = {0: 'add plot', 1: 'add river', 2: 'move gardener',
+                                       3: 'move panda', 4: 'add objective'}
                             for i in update:
-                                actions[i]()
+                                self.create_action_button(actions[i])
                     else:  # second iteration of this, when wind was the weather
                         self.create_action_menu()
+
+                elif self.turn_list[-1] == 'move panda' or self.turn_list[-1] == 'move gardener':
+                    selected_tile = self.board.select_tile()
+                    if selected_tile:
+                        self.move_character(
+                            self.panda if self.turn_list[-1] == 'move panda' else self.gardener, selected_tile)
+
+                elif self.turn_list[-1] == 'add river':
+                    if self.pile_rivers > 0:
+                        self.current_player.river_reserve += 1
+                    else:
+                        print('not enough rivers!')
+
+                    del self.turn_list[-1]
+                    self.button_system.enable()
+
+                elif self.turn_list[-1] == 'add plot':
+                    del self.turn_list[-1]
+                    self.turn_list.append('choose plot menu')
+
+                    for i in range(3 if self.pile_tiles.len() >= 3 else self.pile_tiles.len()):
+                        self.top_cards.append(self.pile_tiles.take())
+
+                    # Create menu items:
+                    menu_items = []
+
+                    # convert self.top_cards into menu items
+                    for i in self.top_cards:
+                        # Create a temporary board to hold the tile to choose, then draw it into a 'menu item'
+                        board = Board(200, (200, 200))
+                        plot = Plot(0, 0, i.colour, board, i.improvement)
+
+                        #  remove all bamboo, incase it has a 'irrigation' improvement and has grown bamboo
+                        plot.remove_bamboo(5)
+                        board.place(plot)
+
+                        surface = pygame.Surface((400, 400))
+                        board.draw(surface)
+                        surface.set_colorkey((0, 0, 0))
+                        menu_items.append(MenuItem(surface))
+
+                    self.menu = ChooseMenu(
+                        menu_items, 'Choose 1 plot to place:')
+                    self.menu.add(self.objects)
+
+                elif self.turn_list[-1] == 'add objective':
+                    self.button_system.enable()
+
+                elif self.turn_list[-1] == 'choose plot menu':
+                    update = self.menu.update()
+                    if update:
+                        self.clear_menu()
+                        self.to_place = self.top_cards[update[0]]
+
+                        del self.top_cards[update[0]]
+                        for i in self.top_cards:  # add the other two cards back to the pile
+                            self.pile_tiles.append(i)
+
+                        self.top_cards = []
+                        self.turn_list.append('place plot')
+
+                elif self.turn_list[-1] == 'place plot':
+                    if self.board.place_tile(self.to_place):
+                        # Tile placed
+                        self.to_place = None
+                        del self.turn_list[-1]
+                        self.button_system.enable()
 
             '''
             if self.game_state == 'grow':

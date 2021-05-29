@@ -171,6 +171,8 @@ class Plot(Tile):
         if self.bamboo_amount - amount >= 0:
             self.bamboo_amount -= amount
             return self.bamboo_amount
+        else:
+            self.bamboo_amount = 0
 
     def eat(self):
         if self.improvement != 'panda':

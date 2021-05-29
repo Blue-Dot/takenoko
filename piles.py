@@ -40,9 +40,12 @@ class Pile():
             raise Exception("this pile is empty")
     
     def append(self, card):
+        '''Place on the bottom of the pile'''
         self.pile.append(card)
 
     def shuffle(self):
         random.shuffle(self.pile)
         return self
 
+    def len(self):
+        return len(self.pile)

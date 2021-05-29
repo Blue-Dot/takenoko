@@ -4,7 +4,7 @@ import config as c
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, text, x, y, width, height, on_click):
+    def __init__(self, text, x, y, width, height, on_click, arguments=None):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.size = (width, height)
@@ -17,6 +17,7 @@ class Button(pygame.sprite.Sprite):
 
         self.pressed = False
         self.on_click = on_click
+        self.arguments = arguments
 
         self.create_surface(self.colour, self.text_colour)
 
@@ -39,7 +40,10 @@ class Button(pygame.sprite.Sprite):
                 self.create_surface(self.click_colour, self.text_colour)
             else:  # Button 1 is not pressed
                 if self.pressed:  # Ie just released
-                    self.on_click()
+                    if self.arguments:
+                        self.on_click(self.arguments)
+                    else:
+                        self.on_click()
                 self.pressed = False
                 self.create_surface(self.hover_colour, self.text_colour)
         else:
@@ -50,6 +54,9 @@ class Button(pygame.sprite.Sprite):
     def move_to(self, x, y):
         '''move the button'''
         self.rect = self.rect.move(x - self.rect.x, y - self.rect.y)
+
+    def add_arguments(self, arguments):
+        self.arguments = arguments
 
 
 class Toggle(Button):
@@ -78,19 +85,33 @@ class ButtonSystem(pygame.sprite.Sprite):
         super().__init__()
         self.coords = pygame.rect.Rect((x, y), (0, 0))
         self.buttons = {}
+        self.enabled = True
+        self.identifier = 0
 
     def draw(self, surface):
-        buttons = self.buttons.copy() # this is needed because self.buttons can change during 'run' (ie if a button is deleted)
-        for i in buttons:
-            self.buttons[i].draw(surface)
+        if self.enabled:
+            buttons = self.buttons.copy() # this is needed because self.buttons can change during 'run' (ie if a button is deleted)
+            for i in buttons:
+                self.buttons[i].draw(surface)
 
-    def add_button(self, button, name):
-        '''add a button to the button system'''
+    def add_button(self, button):
+        '''add a button to the button system - returns id'''
+        self.identifier += 1
         button.move_to(self.coords.x, self.coords.y + 50 * len(self.buttons))
-        self.buttons[name] = button
+        self.buttons[self.identifier] = button
+        return self.identifier
+
 
     def remove(self, name):
         del self.buttons[name]
 
         for index, i in enumerate(self.buttons):
             self.buttons[i].move_to(self.coords.x, self.coords.y + 50 * index)
+
+    def disable(self):
+        '''disables the system so that the buttons aren't drawn, and cannot be pressed'''
+        self.enabled = False
+
+    def enable(self):
+        '''enables the system so that the buttons are drawn and active'''
+        self.enabled = True

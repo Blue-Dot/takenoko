@@ -9,6 +9,16 @@
             "id": "TI5",
             "colour": "green",
             "improvements": "panda"
+        },
+        {
+            "id": "TI4",
+            "colour": "yellow",
+            "improvements": "irrigation"
+        },
+        {
+            "id": "TI4",
+            "colour": "pink",
+            "improvements": null
         }
     ],
     "objectives": {
