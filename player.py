@@ -8,7 +8,8 @@ class Player:
 
         self.river_reserve = 0
         self.bamboo_reserve = []
-        self.improvement_reserve = {0: 0, 1: 0, 2: 0} #1 = irrigation, 2 = panda, 3 = gardener
+        # 1 = irrigation, 2 = panda, 3 = gardener
+        self.improvement_reserve = {0: 0, 1: 0, 2: 0}
 
         self.turn = False  # is it my turn?
 
@@ -52,3 +53,6 @@ class Player:
 
     def add_improvement(self, improvement):
         self.improvement_reserve[improvement] += 1
+
+    def add_objective(self, objective):
+        self.hand.add_objective(objective)

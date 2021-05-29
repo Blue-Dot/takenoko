@@ -42,12 +42,12 @@ class Game:
 
         self.game_state = ''  # CURRENT GAME STATE(!!)\
         self.turn_list = []
-        self.turns = 2
+        self.turns = 0
 
         self.weather = 0
 
         self.players = [Player(self), Player(self)]
-        self.current_player_number = 0
+        self.current_player_number = len(self.players) - 1 # This is the last player atm, because self.next_turn iterates it to the first player when the game starts
         self.current_player = self.players[self.current_player_number]
         self.current_player.start_turn()
 
@@ -69,6 +69,7 @@ class Game:
         self.to_place = None  # A card for the user to place
 
         self.improvement_link = {}
+        self.objective_link = {}
 
         self.menu = None
         self.dice = None
@@ -305,6 +306,7 @@ class Game:
         self.turn_list = ['end turn', 'choose actions']
 
         if self.turns // len(self.players) >= 1:
+            print(self.turns // len(self.players))
             self.turn_list += ['weather', 'roll dice']
 
         self.turns += 1
@@ -394,6 +396,7 @@ class Game:
         # self.players[0].hand.add_objective(Objective(self.players[0].hand))
 
         # self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
+        self.next_turn()
 
         while self.is_game_running:
             # Reset display by rendering the background image
@@ -403,12 +406,7 @@ class Game:
 
             # print(self.turn_list)
             if len(self.turn_list) > 0:
-                if self.turn_list[-1] == 'turn start':
-
-                    if self.turns // len(self.players) >= 1:
-                        self.turn_list.append('roll dice')
-
-                elif self.turn_list[-1] == 'weather':
+                if self.turn_list[-1] == 'weather':
 
                     if self.weather == 0:  # sun - extra action
                         del self.turn_list[-1]
@@ -549,7 +547,20 @@ class Game:
                     self.menu.add(self.objects)
 
                 elif self.turn_list[-1] == 'add objective':
-                    self.button_system.enable()
+                    option_images = []
+                    self.objective_link = {}
+
+                    for i in self.pile_objectives:
+                        if self.pile_objectives[i].len() > 0:
+                            option_images.append(
+                                MenuItem(pygame.image.load(c.objectives_images[i])))
+                            self.objective_link[len(option_images) - 1] = i
+
+                    self.menu = ChooseMenu(option_images, 'Choose 1 objective')
+                    self.menu.add(self.objects)
+
+                    del self.turn_list[-1]
+                    self.turn_list.append('objective choice menu')
 
                 elif self.turn_list[-1] == 'choose plot menu':
                     update = self.menu.update()
@@ -570,6 +581,17 @@ class Game:
                         self.to_place = None
                         del self.turn_list[-1]
                         self.button_system.enable()
+
+                elif self.turn_list[-1] == 'objective choice menu':
+                    update = self.menu.update()
+                    if update:
+                        self.clear_menu()
+                        # add objective using self.objective_link to player hand:
+                        objective = self.pile_objectives[self.objective_link[update[0]]].take()
+                        objective.assign_hand(self.current_player.hand)
+                        self.current_player.add_objective(objective)
+                        self.button_system.enable()
+
 
             '''
             if self.game_state == 'grow':

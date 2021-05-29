@@ -95,3 +95,5 @@ player_info_width = 350
 
 image_river = 'images/river.png'
 objective_image = 'images/objective.png'
+objectives_images = {'panda': 'images/objectives/panda.png',
+                     'gardener': 'images/objectives/gardener.png', 'plots': 'images/objectives/plots.png'}
