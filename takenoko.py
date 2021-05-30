@@ -44,10 +44,11 @@ class Game:
         self.turn_list = []
         self.turns = 0
 
-        self.weather = 0
+        self.weather = 6  # Non existant weather
 
         self.players = [Player(self), Player(self)]
-        self.current_player_number = len(self.players) - 1 # This is the last player atm, because self.next_turn iterates it to the first player when the game starts
+        # This is the last player atm, because self.next_turn iterates it to the first player when the game starts
+        self.current_player_number = len(self.players) - 1
         self.current_player = self.players[self.current_player_number]
         self.current_player.start_turn()
 
@@ -144,7 +145,13 @@ class Game:
         self.button_system.add(self.objects)
 
         self.button_system.add_button(
-            Button('next turn', 0, 0, 100, 30, self.next_turn))
+            Button('end turn', 0, 0, 100, 30, self.next_turn))
+
+        self.button_system.add_button(
+            Button('place river', 0, 0, 130, 30, self.place_river))
+
+        self.button_system.add_button(
+            Button('place improvement', 0, 0, 130, 30, self.place_improvement))
 
         '''
         self.add_objective_button = Button(
@@ -309,6 +316,8 @@ class Game:
             print(self.turns // len(self.players))
             self.turn_list += ['weather', 'roll dice']
 
+        self.button_system.disable()
+
         self.turns += 1
 
     def clear_menu(self):
@@ -347,26 +356,6 @@ class Game:
         self.button_system.remove(button_name)
         self.turn_list.append(turn_list_name)
 
-    ''' def add_plot(self):
-        self.button_system.disable()
-        self.button_system.remove('add plot')
-        self.turn_list.append('objective choice menu')
-
-    def move_gardener(self):
-        self.button_system.disable()
-        self.button_system.remove('move gardener')
-        self.turn_list.append('move gardener')
-
-    def move_panda(self):
-        self.button_system.disable()
-        self.button_system.remove('move panda')
-        self.turn_list.append('move panda')
-
-    def add_objective(self):
-        self.button_system.disable()
-        self.button_system.remove('add objective')
-        self.turn_list.append('objective choice menu')'''
-
     def move_character(self, character, tile):
         if character.move(tile):  # If it was a valid move
             if isinstance(character, Panda):
@@ -379,6 +368,16 @@ class Game:
             # Reset game state (character has moved)
             del self.turn_list[-1]
             self.button_system.enable()
+
+    def place_river(self):
+        if self.current_player.remove_river():
+            self.button_system.disable()
+            self.turn_list.append('place river')
+        else:
+            print('not enough rivers')
+
+    def place_improvement(self):
+        pass
 
     # -- MAIN LOOP --
 
@@ -495,6 +494,8 @@ class Game:
                         update = self.menu.update()
                         if update:
                             self.clear_menu()
+                            self.button_system.enable()
+
                             actions = {0: 'add plot', 1: 'add river', 2: 'move gardener',
                                        3: 'move panda', 4: 'add objective'}
                             for i in update:
@@ -587,11 +588,16 @@ class Game:
                     if update:
                         self.clear_menu()
                         # add objective using self.objective_link to player hand:
-                        objective = self.pile_objectives[self.objective_link[update[0]]].take()
+                        objective = self.pile_objectives[self.objective_link[update[0]]].take(
+                        )
                         objective.assign_hand(self.current_player.hand)
                         self.current_player.add_objective(objective)
                         self.button_system.enable()
 
+                elif self.turn_list[-1] == 'place river':
+                    if self.board.river_system.place_river():
+                        del self.turn_list[-1]
+                        self.button_system.enable()
 
             '''
             if self.game_state == 'grow':

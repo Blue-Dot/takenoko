@@ -24,6 +24,7 @@ class Player:
     def remove_river(self):
         if self.river_reserve > 0:
             self.river_reserve -= 1
+            return True
         else:
             return False
 
@@ -36,6 +37,7 @@ class Player:
         for i in bamboo:
             if i in reserve:
                 reserve.remove(i)
+                return True
             else:
                 return False
 
