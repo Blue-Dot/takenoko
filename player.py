@@ -14,6 +14,7 @@ class Player:
         self.turn = False  # is it my turn?
 
         self.points = 0
+        self.completed_objectives = 0
 
     def draw(self, surface):
         self.hand.draw(surface)
@@ -46,6 +47,10 @@ class Player:
 
     def complete_objective(self, objective):
         self.points += objective.points
+        self.completed_objectives += 1
+
+        if self.completed_objectives >= self.game.objectives_to_win:
+            self.game.trigger_finish()
 
     def start_turn(self):
         self.turn = True
@@ -61,3 +66,7 @@ class Player:
 
     def add_objective(self, objective):
         self.hand.add_objective(objective)
+
+    def emporer_card(self):
+        # First player to finish gets 2 extra points
+        self.points += 2

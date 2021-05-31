@@ -52,6 +52,9 @@ class Game:
         self.current_player = self.players[self.current_player_number]
         self.current_player.start_turn()
 
+        self.finish = 0 # the turn which the finish is triggered on (0 if not finished)
+        self.objectives_to_win = c.objs_to_win[len(self.players)]
+
         # -- GAME OBJECTS --
 
         self.player_label = None
@@ -204,7 +207,7 @@ class Game:
             Button('place river', 0, 0, 130, 30, self.place_river))
 
         self.button_system.add_button(
-            Button('place improvement', 0, 0, 130, 30, self.place_improvement))
+            Button('place improvement', 0, 0, 180, 30, self.place_improvement))
 
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, c.board_center)
@@ -320,10 +323,19 @@ class Game:
         if self.button_system:  # self.button_system does not exist before the first turn
             self.button_system.remove(self.objects)
 
+        self.turns += 1
+
+        if self.finish != 0:
+            # the last round has been triggered
+            if self.turns - self.finish >= len(self.players):
+                # the final round has finished
+                self.end_game()
+                self.turn_list = []
+
         self.create_button_system()
         self.button_system.disable()
 
-        self.turns += 1
+        
 
     def clear_menu(self):
         '''clear the menu, and complete the last of "turn_list"'''
@@ -402,6 +414,21 @@ class Game:
             self.button_system.disable()
         else:
             print('no improvements')
+
+    def trigger_finish(self):
+        self.finish = self.turns
+        self.current_player.emporer_card()
+        print('last turn')
+
+    def end_game(self):
+        winner = None
+        winner_points = 0
+        for i in self.players:
+            if i.points > winner_points:
+                winner = i
+                winner_points = i.points
+
+        print('Congratulations! Player %s won with %i points' % (self.players.index(winner) + 1, winner_points))
 
     # -- MAIN LOOP --
 

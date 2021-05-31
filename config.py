@@ -24,6 +24,9 @@ board_center = (width / 2, height / 3)
 
 number_of_players = 2
 
+# The number of objectives required to be completed before the last round is triggeredz
+objs_to_win = {2: 1, 3: 8, 4: 7}
+
 top_bar_colour = colours.TAN
 top_bar_height = 40
 top_bar_outline_colour = colours.DARKSLATEGRAY
