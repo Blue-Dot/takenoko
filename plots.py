@@ -132,7 +132,7 @@ class Plot(Tile):
                               (improvement_location_x, improvement_location_y))
 
     def add_improvement(self, improvement):
-        '''improvement = 'irrigation', 'panda' or 'gardener/' '''
+        '''improvement = 'irrigation', 'panda' or 'gardener' '''
         self.improvement = improvement
         self.improvement_index = c.improvements.index(self.improvement)
 
@@ -189,6 +189,10 @@ class Plot(Tile):
             else:
                 self.add_bamboo(1)
 
+    def has_improvement(self):
+        if self.improvement == None:
+            return False
+        return True
 
 class Pond(Tile):
     def __init__(self, q, r, board):

@@ -141,18 +141,6 @@ class Game:
         self.quit_button = Button('quit', c.width - 55, 5, 50, 30, self.b_quit)
         self.quit_button.add(self.objects)
 
-        self.button_system = ButtonSystem(20, 65)
-        self.button_system.add(self.objects)
-
-        self.button_system.add_button(
-            Button('end turn', 0, 0, 100, 30, self.next_turn))
-
-        self.button_system.add_button(
-            Button('place river', 0, 0, 130, 30, self.place_river))
-
-        self.button_system.add_button(
-            Button('place improvement', 0, 0, 130, 30, self.place_improvement))
-
         '''
         self.add_objective_button = Button(
             'add objective', 20, 65, 150, 30, self.b_add_objective
@@ -204,6 +192,19 @@ class Game:
         self.add_river_button.add(self.objects)
 
         '''
+
+    def create_button_system(self):
+        self.button_system = ButtonSystem(20, 65)
+        self.button_system.add(self.objects)
+
+        self.button_system.add_button(
+            Button('end turn', 0, 0, 100, 30, self.next_turn))
+
+        self.button_system.add_button(
+            Button('place river', 0, 0, 130, 30, self.place_river))
+
+        self.button_system.add_button(
+            Button('place improvement', 0, 0, 130, 30, self.place_improvement))
 
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, c.board_center)
@@ -316,6 +317,10 @@ class Game:
             print(self.turns // len(self.players))
             self.turn_list += ['weather', 'roll dice']
 
+        if self.button_system:  # self.button_system does not exist before the first turn
+            self.button_system.remove(self.objects)
+
+        self.create_button_system()
         self.button_system.disable()
 
         self.turns += 1
@@ -353,7 +358,7 @@ class Game:
         button_name = args[0]
         turn_list_name = args[1]
         self.button_system.disable()
-        self.button_system.remove(button_name)
+        self.button_system.remove_button(button_name)
         self.turn_list.append(turn_list_name)
 
     def move_character(self, character, tile):
@@ -377,7 +382,26 @@ class Game:
             print('not enough rivers')
 
     def place_improvement(self):
-        pass
+        option_images = []
+        self.improvement_link = {}
+
+        for i in self.current_player.improvement_reserve:
+            if self.current_player.improvement_reserve[i] > 0:
+                option_images.append(
+                    MenuItem(pygame.image.load(c.improvement_images[i])))
+                # key = the index of the improvement in the menu, value = the index of the improvement overall
+                self.improvement_link[len(
+                    option_images) - 1] = i
+
+        if len(option_images) > 0:
+            self.menu = ChooseMenu(
+                option_images, 'Choose an improvement')
+            self.menu.add(self.objects)
+
+            self.turn_list.append('place improvement choice menu')
+            self.button_system.disable()
+        else:
+            print('no improvements')
 
     # -- MAIN LOOP --
 
@@ -598,6 +622,29 @@ class Game:
                     if self.board.river_system.place_river():
                         del self.turn_list[-1]
                         self.button_system.enable()
+
+                elif self.turn_list[-1] == 'place improvement choice menu':
+
+                    update = self.menu.update()
+                    if update:
+                        self.to_place = self.improvement_link[update[0]]
+                        self.current_player.remove_improvement(self.to_place)
+
+                        self.clear_menu()
+                        self.turn_list.append('place improvement')
+
+                elif self.turn_list[-1] == 'place improvement':
+
+                    update = self.board.select_tile()
+                    if update:
+                        if not update.has_improvement():
+                            update.add_improvement(
+                                c.improvements[self.to_place])
+                            del self.turn_list[-1]
+                            self.button_system.enable()
+                        else:
+                            print(
+                                'please choose a new tile - this one allready has an improvement')
 
             '''
             if self.game_state == 'grow':

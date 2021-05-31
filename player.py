@@ -56,5 +56,8 @@ class Player:
     def add_improvement(self, improvement):
         self.improvement_reserve[improvement] += 1
 
+    def remove_improvement(self, improvement):
+        self.improvement_reserve[improvement] -= 1
+
     def add_objective(self, objective):
         self.hand.add_objective(objective)

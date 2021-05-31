@@ -102,7 +102,7 @@ class ButtonSystem(pygame.sprite.Sprite):
         return self.identifier
 
 
-    def remove(self, name):
+    def remove_button(self, name):
         del self.buttons[name]
 
         for index, i in enumerate(self.buttons):
@@ -115,3 +115,6 @@ class ButtonSystem(pygame.sprite.Sprite):
     def enable(self):
         '''enables the system so that the buttons are drawn and active'''
         self.enabled = True
+
+    def clear(self):
+        self.buttons = {}

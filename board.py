@@ -75,12 +75,13 @@ class MainBoard(Board):  # THE MAIN BOARD WHICH IS FOR EVERYTHING
                     hash_table[mouse_coords_axial.coords].hover()
                     self.hovered_tiles.append(mouse_coords_axial.coords)
 
-    def select_tile(self):  # Returns the tile if one is selected
+    def select_tile(self) -> Plot:  # Returns the tile if one is selected
         '''Returns none if no hexagons were selected in that frame, returns the tile object if one was'''
         return_val = self.highlight_tiles(self.hash_table)
         if return_val and return_val != 'mouse_off':
             # if isinstance(self.hash_table[return_val], Plot): #Makes sure the pond can't be returned
             return self.hash_table[return_val]
+        return None
 
     def place_tile(self, tile):  # Use the mouse to place a new tile
         mouse_coords_axial = self.calculate_mouse_coords()
