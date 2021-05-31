@@ -52,7 +52,8 @@ class Game:
         self.current_player = self.players[self.current_player_number]
         self.current_player.start_turn()
 
-        self.finish = 0 # the turn which the finish is triggered on (0 if not finished)
+        # the turn which the finish is triggered on (0 if not finished)
+        self.finish = 0
         self.objectives_to_win = c.objs_to_win[len(self.players)]
 
         # -- GAME OBJECTS --
@@ -335,8 +336,6 @@ class Game:
         self.create_button_system()
         self.button_system.disable()
 
-        
-
     def clear_menu(self):
         '''clear the menu, and complete the last of "turn_list"'''
         del self.turn_list[-1]
@@ -416,11 +415,13 @@ class Game:
             print('no improvements')
 
     def trigger_finish(self):
+        '''player has copmleted enough objectives - can finish now'''
         self.finish = self.turns
         self.current_player.emporer_card()
         print('last turn')
 
     def end_game(self):
+        ''''''
         winner = None
         winner_points = 0
         for i in self.players:
@@ -428,7 +429,8 @@ class Game:
                 winner = i
                 winner_points = i.points
 
-        print('Congratulations! Player %s won with %i points' % (self.players.index(winner) + 1, winner_points))
+        print('Congratulations! Player %s won with %i points' %
+              (self.players.index(winner) + 1, winner_points))
 
     # -- MAIN LOOP --
 

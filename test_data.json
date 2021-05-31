@@ -1,0 +1,67 @@
+{
+    "tiles": [
+        {
+            "id": "TI4",
+            "colour": "green",
+            "improvements": null
+        },
+        {
+            "id": "TI5",
+            "colour": "green",
+            "improvements": "panda"
+        },
+        {
+            "id": "TI4",
+            "colour": "yellow",
+            "improvements": "irrigation"
+        },
+        {
+            "id": "TI4",
+            "colour": "pink",
+            "improvements": null
+        }
+    ],
+    "objectives": {
+        "panda": [
+            {
+                "id": "PA1",
+                "points": 2,
+                "bamboo": ["pink", "pink"]
+            },
+            {
+                "id": "PA2",
+                "points": 3,
+                "bamboo": ["pink", "green", "yellow"]
+            }
+        ],
+        "gardener": [
+            {
+                "id": "GA1",
+                "points": 3,
+                "bamboo": [["pink", 4, "irrigation"]] 
+            },
+            {
+                "id": "GA2",
+                "points": 4,
+                "bamboo": [["yellow", 3, null], ["yellow", 3, null], ["yellow", 3, null]]
+            }
+        ],
+        "plots": [
+            {
+                "id": "PL1",
+                "points": 3,
+                "tiles": [[[0, 0], "green"], [[0, 1], "pink"], [[1, 0], "pink"]]
+            },
+            {
+                "id": "PL2",
+                "points": 3,
+                "tiles": [[[0, 0], "green"], [[0, 1], "green"], [[1, 0], "green"]]
+            },
+            {
+                "id": "PL3",
+                "points": 3,
+                "tiles": [[[0, 0], "yellow"], [[0, 1], "yellow"], [[0, 2], "yellow"]]
+            }
+        ]
+    }
+}

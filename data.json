@@ -1,14 +1,24 @@
 {
     "tiles": [
         {
-            "id": "TI4",
-            "colour": "green",
+            "id": "TI0",
+            "colour": "yellow",
             "improvements": null
         },
         {
-            "id": "TI5",
-            "colour": "green",
-            "improvements": "panda"
+            "id": "TI1",
+            "colour": "yellow",
+            "improvements": null
+        },
+        {
+            "id": "TI2",
+            "colour": "yellow",
+            "improvements": null
+        },
+        {
+            "id": "TI3",
+            "colour": "yellow",
+            "improvements": null
         },
         {
             "id": "TI4",
@@ -16,7 +26,112 @@
             "improvements": "irrigation"
         },
         {
-            "id": "TI4",
+            "id": "TI5",
+            "colour": "yellow",
+            "improvements": null
+        },
+        {
+            "id": "TI6",
+            "colour": "yellow",
+            "improvements": "gardener"
+        },
+        {
+            "id": "TI7",
+            "colour": "yellow",
+            "improvements": null
+        },
+        {
+            "id": "TI8",
+            "colour": "yellow",
+            "improvements": "panda"
+        },
+        {
+            "id": "TI9",
+            "colour": "green",
+            "improvements": null
+        },
+        {
+            "id": "TI10",
+            "colour": "green",
+            "improvements": null
+        },
+        {
+            "id": "TI11",
+            "colour": "green",
+            "improvements": "panda"
+        },
+        {
+            "id": "TI12",
+            "colour": "green",
+            "improvements": null
+        },
+        {
+            "id": "TI13",
+            "colour": "green",
+            "improvements": null
+        },
+        {
+            "id": "TI14",
+            "colour": "green",
+            "improvements": "irrigation"
+        },
+        {
+            "id": "TI15",
+            "colour": "green",
+            "improvements": "panda"
+        },
+        {
+            "id": "TI16",
+            "colour": "green",
+            "improvements": null
+        },
+        {
+            "id": "TI17",
+            "colour": "green",
+            "improvements": "irrigation"
+        },
+        {
+            "id": "TI18",
+            "colour": "green",
+            "improvements": "gardener"
+        },
+        {
+            "id": "TI19",
+            "colour": "green",
+            "improvements": "gardener"
+        },
+        {
+            "id": "TI20",
+            "colour": "pink",
+            "improvements": null
+        },
+        {
+            "id": "TI21",
+            "colour": "pink",
+            "improvements": "irrigation"
+        },
+        {
+            "id": "TI22",
+            "colour": "pink",
+            "improvements": "gardener"
+        },
+        {
+            "id": "TI23",
+            "colour": "pink",
+            "improvements": "panda"
+        },
+        {
+            "id": "TI24",
+            "colour": "pink",
+            "improvements": null
+        },
+        {
+            "id": "TI25",
+            "colour": "pink",
+            "improvements": null
+        },
+        {
+            "id": "TI26",
             "colour": "pink",
             "improvements": null
         }
@@ -24,43 +139,773 @@
     "objectives": {
         "panda": [
             {
+                "id": "PA0",
+                "points": 3,
+                "bamboo": [
+                    "green",
+                    "green"
+                ]
+            },
+            {
                 "id": "PA1",
-                "points": 2,
-                "bamboo": ["pink", "pink"]
+                "points": 5,
+                "bamboo": [
+                    "pink",
+                    "pink"
+                ]
             },
             {
                 "id": "PA2",
+                "points": 5,
+                "bamboo": [
+                    "pink",
+                    "pink"
+                ]
+            },
+            {
+                "id": "PA3",
+                "points": 6,
+                "bamboo": [
+                    "pink",
+                    "yellow",
+                    "green"
+                ]
+            },
+            {
+                "id": "PA4",
                 "points": 3,
-                "bamboo": ["pink", "green", "yellow"]
+                "bamboo": [
+                    "green",
+                    "green"
+                ]
+            },
+            {
+                "id": "PA5",
+                "points": 4,
+                "bamboo": [
+                    "yellow",
+                    "yellow"
+                ]
+            },
+            {
+                "id": "PA6",
+                "points": 4,
+                "bamboo": [
+                    "yellow",
+                    "yellow"
+                ]
+            },
+            {
+                "id": "PA7",
+                "points": 3,
+                "bamboo": [
+                    "green",
+                    "green"
+                ]
+            },
+            {
+                "id": "PA8",
+                "points": 3,
+                "bamboo": [
+                    "green",
+                    "green"
+                ]
+            },
+            {
+                "id": "PA9",
+                "points": 5,
+                "bamboo": [
+                    "pink",
+                    "pink"
+                ]
+            },
+            {
+                "id": "PA10",
+                "points": 6,
+                "bamboo": [
+                    "yellow",
+                    "green",
+                    "pink"
+                ]
+            },
+            {
+                "id": "PA11",
+                "points": 4,
+                "bamboo": [
+                    "yellow",
+                    "yellow"
+                ]
+            },
+            {
+                "id": "PA12",
+                "points": 4,
+                "bamboo": [
+                    "yellow",
+                    "yellow"
+                ]
+            },
+            {
+                "id": "PA13",
+                "points": 3,
+                "bamboo": [
+                    "green",
+                    "green"
+                ]
+            },
+            {
+                "id": "PA14",
+                "points": 6,
+                "bamboo": [
+                    "yellow",
+                    "green",
+                    "pink"
+                ]
             }
         ],
         "gardener": [
             {
+                "id": "GA0",
+                "points": 6,
+                "bamboo": [
+                    [
+                        "pink",
+                        4,
+                        "panda"
+                    ]
+                ]
+            },
+            {
                 "id": "GA1",
                 "points": 3,
-                "bamboo": [["pink", 4, "irrigation"]] 
+                "bamboo": [
+                    [
+                        "green",
+                        4,
+                        "gardener"
+                    ]
+                ]
             },
             {
                 "id": "GA2",
                 "points": 4,
-                "bamboo": [["yellow", 3, null], ["yellow", 3, null], ["yellow", 3, null]]
+                "bamboo": [
+                    [
+                        "green",
+                        4,
+                        "panda"
+                    ]
+                ]
+            },
+            {
+                "id": "GA3",
+                "points": 6,
+                "bamboo": [
+                    [
+                        "pink",
+                        3,
+                        null
+                    ],
+                    [
+                        "pink",
+                        3,
+                        null
+                    ]
+                ]
+            },
+            {
+                "id": "GA4",
+                "points": 4,
+                "bamboo": [
+                    [
+                        "green",
+                        4,
+                        "irrigation"
+                    ]
+                ]
+            },
+            {
+                "id": "GA5",
+                "points": 8,
+                "bamboo": [
+                    [
+                        "green",
+                        3,
+                        null
+                    ],
+                    [
+                        "green",
+                        3,
+                        null
+                    ],
+                    [
+                        "green",
+                        3,
+                        null
+                    ],
+                    [
+                        "green",
+                        3,
+                        null
+                    ]
+                ]
+            },
+            {
+                "id": "GA6",
+                "points": 7,
+                "bamboo": [
+                    [
+                        "pink",
+                        4,
+                        "None"
+                    ]
+                ]
+            },
+            {
+                "id": "GA7",
+                "points": 5,
+                "bamboo": [
+                    [
+                        "green",
+                        4,
+                        "None"
+                    ]
+                ]
+            },
+            {
+                "id": "GA8",
+                "points": 5,
+                "bamboo": [
+                    [
+                        "pink",
+                        4,
+                        "gardener"
+                    ]
+                ]
+            },
+            {
+                "id": "GA9",
+                "points": 4,
+                "bamboo": [
+                    [
+                        "yellow",
+                        4,
+                        "gardener"
+                    ]
+                ]
+            },
+            {
+                "id": "GA10",
+                "points": 5,
+                "bamboo": [
+                    [
+                        "yellow",
+                        4,
+                        "panda"
+                    ]
+                ]
+            },
+            {
+                "id": "GA11",
+                "points": 5,
+                "bamboo": [
+                    [
+                        "yellow",
+                        4,
+                        "irrigation"
+                    ]
+                ]
+            },
+            {
+                "id": "GA12",
+                "points": 6,
+                "bamboo": [
+                    [
+                        "yellow",
+                        4,
+                        "None"
+                    ]
+                ]
+            },
+            {
+                "id": "GA13",
+                "points": 6,
+                "bamboo": [
+                    [
+                        "pink",
+                        4,
+                        "irrigation"
+                    ]
+                ]
+            },
+            {
+                "id": "GA14",
+                "points": 7,
+                "bamboo": [
+                    [
+                        "yellow",
+                        3,
+                        null
+                    ],
+                    [
+                        "yellow",
+                        3,
+                        null
+                    ],
+                    [
+                        "yellow",
+                        3,
+                        null
+                    ]
+                ]
             }
         ],
         "plots": [
             {
+                "id": "PL0",
+                "points": 4,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            1,
+                            0
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "pink"
+                    ]
+                ]
+            },
+            {
                 "id": "PL1",
                 "points": 3,
-                "tiles": [[[0, 0], "green"], [[0, 1], "pink"], [[1, 0], "pink"]]
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            1,
+                            0
+                        ],
+                        "yellow"
+                    ]
+                ]
             },
             {
                 "id": "PL2",
                 "points": 3,
-                "tiles": [[[0, 0], "green"], [[0, 1], "green"], [[1, 0], "green"]]
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            0,
+                            2
+                        ],
+                        "yellow"
+                    ]
+                ]
             },
             {
                 "id": "PL3",
+                "points": 4,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            -1,
+                            1
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            -1,
+                            2
+                        ],
+                        "yellow"
+                    ]
+                ]
+            },
+            {
+                "id": "PL4",
                 "points": 3,
-                "tiles": [[[0, 0], "yellow"], [[0, 1], "yellow"], [[0, 2], "yellow"]]
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            -1,
+                            1
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            -1,
+                            2
+                        ],
+                        "green"
+                    ]
+                ]
+            },
+            {
+                "id": "PL5",
+                "points": 3,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            -1,
+                            1
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            -1,
+                            2
+                        ],
+                        "green"
+                    ]
+                ]
+            },
+            {
+                "id": "PL6",
+                "points": 4,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            -1,
+                            1
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            -1,
+                            2
+                        ],
+                        "pink"
+                    ]
+                ]
+            },
+            {
+                "id": "PL7",
+                "points": 3,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            -1,
+                            2
+                        ],
+                        "yellow"
+                    ]
+                ]
+            },
+            {
+                "id": "PL8",
+                "points": 5,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "yellow"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            -1,
+                            1
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            -1,
+                            2
+                        ],
+                        "yellow"
+                    ]
+                ]
+            },
+            {
+                "id": "PL9",
+                "points": 2,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            -1,
+                            2
+                        ],
+                        "green"
+                    ]
+                ]
+            },
+            {
+                "id": "PL10",
+                "points": 2,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            0,
+                            2
+                        ],
+                        "green"
+                    ]
+                ]
+            },
+            {
+                "id": "PL11",
+                "points": 2,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "green"
+                    ],
+                    [
+                        [
+                            1,
+                            0
+                        ],
+                        "green"
+                    ]
+                ]
+            },
+            {
+                "id": "PL12",
+                "points": 4,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            0,
+                            2
+                        ],
+                        "pink"
+                    ]
+                ]
+            },
+            {
+                "id": "PL13",
+                "points": 5,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            -1,
+                            1
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            -1,
+                            2
+                        ],
+                        "pink"
+                    ]
+                ]
+            },
+            {
+                "id": "PL14",
+                "points": 4,
+                "tiles": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            0,
+                            1
+                        ],
+                        "pink"
+                    ],
+                    [
+                        [
+                            -1,
+                            2
+                        ],
+                        "pink"
+                    ]
+                ]
             }
         ]
     }
