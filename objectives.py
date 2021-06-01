@@ -147,7 +147,7 @@ class Gardener(Objective):
             elif index == 2:
                 q, r = -1, 1
             elif index == 3:
-                q, r = 2, -1
+                q, r = -1, 2
             board.place(Plot(q, r, i[0], board, i[2]))
             board.hash_table[(q, r)].bamboo_amount = i[1]
         board.draw(self.surface)
