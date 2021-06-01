@@ -6,11 +6,13 @@ from button import Button, Toggle
 
 
 class ChooseMenu(pygame.sprite.Sprite):
-    def __init__(self, choices, text, number=1):
+    def __init__(self, choices, text, game, number=1):
         super().__init__()
         self.size = (len(choices)*150, c.choose_menu_height)
         self.choices = choices
         self.number = number
+
+        self.game = game
 
         self.toggles = []
 
@@ -65,7 +67,7 @@ class ChooseMenu(pygame.sprite.Sprite):
         if len(self.selected_options) == self.number:
             self.complete = True
         else:
-            print('you selected %i options, when you should have selected %i options' % (
+            self.game.update_help('you selected %i options, when you should have selected %i options' % (
                 len(self.selected_options), self.number))
 
     def update(self):

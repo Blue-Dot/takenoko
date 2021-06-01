@@ -43,7 +43,7 @@ class Objective(pygame.sprite.Sprite):
             if self.valid():
                 self.hand.remove_objective(self)
             else:
-                print('Not complete yet!')
+                self.hand.game.update_help(c.objective_incomplete)
         else:
             raise Exception('This objective is not in a hand')
 

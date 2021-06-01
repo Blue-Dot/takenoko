@@ -9,7 +9,7 @@ from button import Button, ButtonSystem
 from plots import Pond, Plot
 from board import MainBoard, Board
 from characters import Panda, Gardener
-#from objectives import Objective
+# from objectives import Objective
 from piles import Pile
 from weather import WeatherDice
 from choose_menu import ChooseMenu, MenuItem
@@ -333,10 +333,9 @@ class Game:
 
         self.current_player.start_turn()
 
-        self.turn_list = ['nothing', 'choose actions']
+        self.turn_list = ['waiting', 'choose actions']
 
         if self.turns // len(self.players) >= 1:
-            print(self.turns // len(self.players))
             self.turn_list += ['weather', 'roll dice']
 
         if self.button_system:  # self.button_system does not exist before the first turn
@@ -378,21 +377,21 @@ class Game:
 
         if self.pile_rivers > 0:
             options.append(MenuItem(pygame.image.load(
-                       c.image_river).convert_alpha())) # add river
+                c.image_river).convert_alpha()))  # add river
 
         options += [MenuItem(pygame.image.load(
-                       c.gardener_image).convert_alpha()),
-                   MenuItem(pygame.image.load(
-                       c.panda_image).convert_alpha())] # move gardener / move panda
+            c.gardener_image).convert_alpha()),
+            MenuItem(pygame.image.load(
+                c.panda_image).convert_alpha())]  # move gardener / move panda
 
         if not self.current_player.hand.full():
             options.append(MenuItem(pygame.image.load(c.objective_image)))
 
         if self.weather != 2:
             self.menu = ChooseMenu(options, 'Choose %i actions' % (
-                3 if self.weather == 0 else 2), 3 if self.weather == 0 else 2)
+                3 if self.weather == 0 else 2), self, 3 if self.weather == 0 else 2)
         else:
-            self.menu = ChooseMenu(options, 'Choose 1 action')
+            self.menu = ChooseMenu(options, 'Choose 1 action', self)
         self.menu.add(self.objects)
 
     def create_action_button(self, name):
@@ -402,6 +401,7 @@ class Game:
             (button_name, name))
 
     def do_action(self, args):
+        self.update_help('')
         button_name = args[0]
         turn_list_name = args[1]
         self.button_system.disable()
@@ -426,7 +426,7 @@ class Game:
             self.button_system.disable()
             self.turn_list.append('place river')
         else:
-            print('not enough rivers')
+            self.update_help(c.river_warning)
 
     def place_improvement(self):
         option_images = []
@@ -442,19 +442,19 @@ class Game:
 
         if len(option_images) > 0:
             self.menu = ChooseMenu(
-                option_images, 'Choose an improvement')
+                option_images, 'Choose an improvement', self)
             self.menu.add(self.objects)
 
             self.turn_list.append('place improvement choice menu')
             self.button_system.disable()
         else:
-            print('no improvements')
+            self.update_help(c.improvement_warning)
 
     def trigger_finish(self):
         '''player has copmleted enough objectives - can finish now'''
         self.finish = self.turns
         self.current_player.emporer_card()
-        print('last turn')
+        self.update_help('last turn')
 
     def end_game(self):
         ''''''
@@ -465,8 +465,8 @@ class Game:
                 winner = i
                 winner_points = i.points
 
-        print('Congratulations! Player %s won with %i points' %
-              (self.players.index(winner) + 1, winner_points))
+        self.update_help('Congratulations! Player %s won with %i points' %
+                         (self.players.index(winner) + 1, winner_points))
 
     # -- MAIN LOOP --
 
@@ -499,15 +499,23 @@ class Game:
                 if self.turn_list[-1] == 'weather':
 
                     if self.weather == 0:  # sun - extra action
+                        self.update_help(
+                            'Rolled sun - You can choose 3 actions this turn')
                         del self.turn_list[-1]
                     elif self.weather == 1:  # rain
+                        self.update_help(
+                            'Rolled rain - Choose a tile to add bamboo to')
                         selected_tile = self.board.select_tile()
                         if selected_tile:
                             selected_tile.add_bamboo(1)
                             del self.turn_list[-1]
                     elif self.weather == 2:  # wind - similar action
+                        self.update_help(
+                            'Rolled wind - You can choose 2 of the same action this turn')
                         del self.turn_list[-1]
                     elif self.weather == 3:  # storm
+                        self.update_help(
+                            'Rolled storm - Choose a tile to move the panda to')
                         selected_tile = self.board.select_tile()
                         if selected_tile:
                             # If it was a valid move
@@ -517,6 +525,8 @@ class Game:
                                 self.current_player.add_bamboo(bamboo)
                             del self.turn_list[-1]
                     elif self.weather == 4:  # clouds
+                        self.update_help(
+                            'Rolled clouds - Choose an improvement')
                         option_images = []
                         self.improvement_link = {}
 
@@ -529,12 +539,14 @@ class Game:
                                     option_images) - 1] = i
 
                         self.menu = ChooseMenu(
-                            option_images, 'Choose 1 improvement')
+                            option_images, 'Choose 1 improvement', self)
                         self.menu.add(self.objects)
 
                         del self.turn_list[-1]
                         self.turn_list.append('improvement choice menu')
                     elif self.weather == 5:  # choice
+                        self.update_help(
+                            'Rolled choice - Choose a weather type')
                         self.menu = ChooseMenu([
                             MenuItem(pygame.image.load(
                                 c.weather_images[0]).convert_alpha()),
@@ -545,7 +557,7 @@ class Game:
                             MenuItem(pygame.image.load(
                                 c.weather_images[3]).convert_alpha()),
                             MenuItem(pygame.image.load(c.weather_images[4]).convert_alpha())],
-                            'Choose 1 weather system', number=1)
+                            'Choose 1 weather system', self)
                         self.menu.add(self.objects)
                         self.turn_list.append('weather choice menu')
 
@@ -597,6 +609,8 @@ class Game:
                         self.create_action_menu()
 
                 elif self.turn_list[-1] == 'move panda' or self.turn_list[-1] == 'move gardener':
+                    self.update_help('Move the %s in a straight line to a new tile' % (
+                        'panda' if self.turn_list[-1] == 'move panda' else 'gardener'))
                     selected_tile = self.board.select_tile()
                     if selected_tile:
                         self.move_character(
@@ -606,7 +620,7 @@ class Game:
                     if self.pile_rivers > 0:
                         self.current_player.river_reserve += 1
                     else:
-                        print('not enough rivers!')
+                        self.update_help(c.river_reserve_warning)
 
                     del self.turn_list[-1]
                     self.button_system.enable()
@@ -637,7 +651,7 @@ class Game:
                         menu_items.append(MenuItem(surface))
 
                     self.menu = ChooseMenu(
-                        menu_items, 'Choose 1 plot to place:')
+                        menu_items, 'Choose 1 plot to place:', self)
                     self.menu.add(self.objects)
 
                 elif self.turn_list[-1] == 'add objective':
@@ -651,13 +665,14 @@ class Game:
                                     MenuItem(pygame.image.load(c.objectives_images[i])))
                                 self.objective_link[len(option_images) - 1] = i
 
-                        self.menu = ChooseMenu(option_images, 'Choose 1 objective')
+                        self.menu = ChooseMenu(
+                            option_images, 'Choose 1 objective', self)
                         self.menu.add(self.objects)
 
                         del self.turn_list[-1]
                         self.turn_list.append('objective choice menu')
                     else:
-                        print("sorry your hand is full :(")
+                        self.update_help("sorry your hand is full :(")
                         del self.turn_list[-1]
 
                 elif self.turn_list[-1] == 'choose plot menu':
@@ -674,6 +689,7 @@ class Game:
                         self.turn_list.append('place plot')
 
                 elif self.turn_list[-1] == 'place plot':
+                    self.update_help('Choose a location to place a tile')
                     if self.board.place_tile(self.to_place):
                         # Tile placed
                         self.to_place = None
@@ -716,13 +732,17 @@ class Game:
                             del self.turn_list[-1]
                             self.button_system.enable()
                         else:
-                            print(
+                            self.update_help(
                                 'please choose a new tile - this one allready has an improvement')
 
-                elif self.turn_list[-1] == 'nothing':
+                elif self.turn_list[-1] == 'waiting':
                     # waiting for the user to do something
-                    self.update_help(
-                        'Use the buttons on the left to do an action')
+                    if self.help_text.text not in c.waiting_warnings:
+                        self.update_help('')
+
+            else:
+                # Game has ended
+                pass
 
             '''
             if self.game_state == 'grow':

@@ -103,3 +103,11 @@ objectives_images = {'panda': 'images/objectives/panda.png',
 
 help_colour = colours.RED3
 max_rivers = 20
+
+river_warning = "You don't have any rivers"
+improvement_warning = "You don't have any improvements"
+river_reserve_warning = "There aren't any rivers left"
+objective_incomplete = "This objective hasn't been completed yet"
+# Warnings which shouldn't be cleared while waiting:
+waiting_warnings = [river_warning, improvement_warning,
+                    river_reserve_warning, objective_incomplete]
