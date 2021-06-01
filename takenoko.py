@@ -23,8 +23,8 @@ class Game:
 
         self.width, self.height = width, height
 
-        pygame.init()
         pygame.font.init()
+        pygame.init()
 
         self.surface = pygame.display.set_mode((width, height))
 
@@ -129,12 +129,14 @@ class Game:
 
     def create_game_objects(self):
         self.create_labels()
-        self.create_buttons()
+
         self.create_board()
         self.create_characters()
         self.create_weather()
         self.create_piles()
         self.create_player_info()
+        self.create_button_system()
+        self.create_buttons()
 
     def create_labels(self):
         self.player_label = TextObject(
@@ -157,6 +159,9 @@ class Game:
     def create_buttons(self):
         self.quit_button = Button('quit', c.width - 55, 5, 50, 30, self.b_quit)
         self.quit_button.add(self.objects)
+
+        self.button_system.add_button(
+            Button('Start turn', 0, 0, 130, 30, self.next_turn))
 
         '''
         self.add_objective_button = Button(
@@ -213,15 +218,6 @@ class Game:
     def create_button_system(self):
         self.button_system = ButtonSystem(20, 65)
         self.button_system.add(self.objects)
-
-        self.button_system.add_button(
-            Button('end turn', 0, 0, 100, 30, self.next_turn))
-
-        self.button_system.add_button(
-            Button('place river', 0, 0, 130, 30, self.place_river))
-
-        self.button_system.add_button(
-            Button('place improvement', 0, 0, 180, 30, self.place_improvement))
 
     def create_board(self):
         self.board = MainBoard(c.hexagon_size, c.board_center)
@@ -319,6 +315,14 @@ class Game:
             for objective in self.pile_objectives:
                 player.add_objective(self.pile_objectives[objective].take())
 
+    def create_turn_buttons(self):
+        self.button_system.add_button(
+            Button('end turn', 0, 0, 100, 30, self.next_turn))
+        self.button_system.add_button(
+            Button('place river', 0, 0, 130, 30, self.place_river))
+        self.button_system.add_button(
+            Button('place improvement', 0, 0, 180, 30, self.place_improvement))
+
     def next_turn(self):
         # Increase current_player_number by 1, but cycle it through the total number of players
         self.current_player.finish_turn()
@@ -338,8 +342,8 @@ class Game:
         if self.turns // len(self.players) >= 1:
             self.turn_list += ['weather', 'roll dice']
 
-        if self.button_system:  # self.button_system does not exist before the first turn
-            self.button_system.remove(self.objects)
+        #if self.button_system:  # self.button_system does not exist before the first turn
+        self.button_system.remove(self.objects)
 
         self.turns += 1
 
@@ -351,6 +355,7 @@ class Game:
                 self.turn_list = []
 
         self.create_button_system()
+        self.create_turn_buttons()
         self.button_system.disable()
 
     def clear_menu(self):
@@ -486,7 +491,7 @@ class Game:
         # self.players[0].hand.add_objective(Objective(self.players[0].hand))
 
         # self.board.river_system.add_river(Cubic(0, 1, 0), Cubic(1, 1, 0))
-        self.next_turn()
+        # self.next_turn()
 
         while self.is_game_running:
             # Reset display by rendering the background image
@@ -593,7 +598,7 @@ class Game:
 
                 elif self.turn_list[-1] == 'action choice menu':
 
-                    self.update_help('Choose your actions')
+                    #self.update_help('Choose your actions')
 
                     if self.menu:
                         update = self.menu.update()
@@ -816,6 +821,5 @@ class Game:
         pygame.quit()
 
 
-Main_Game = Game(c.width, c.height)
-
-Main_Game.run()
+#Main_Game = Game(c.width, c.height)
+# Main_Game.run()
