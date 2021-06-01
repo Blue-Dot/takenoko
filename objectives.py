@@ -7,42 +7,6 @@ from plots import Tile
 from text_object import TextObject
 
 
-class Hand(pygame.sprite.Sprite):
-    def __init__(self, game):
-        super().__init__()
-
-        self.game = game
-        self.objectives = []
-        self.surface = None
-
-    def draw(self, surface):
-        if len(self.objectives) > 0:
-            width = len(self.objectives) * c.objective_width + \
-                (len(self.objectives) - 1) * c.objective_spacing
-            rect = pygame.rect.Rect(
-                (c.width - width) / 2, c.objective_y, width, c.objective_height)
-
-            for index, i in enumerate(self.objectives):
-                if i is not None:
-                    i.draw(surface, (rect.x + index *
-                           (c.objective_width + c.objective_spacing), rect.y))
-
-    def add_objective(self, objective):
-        if len(self.objectives) < 5:
-            self.objectives.append(objective)
-        else:
-            return False
-
-    def full(self):
-        if len(self.objectives) < 5:
-            return False
-        return True
-
-    def remove_objective(self, objective):
-        self.objectives.remove(objective)
-        self.game.current_player.complete_objective(objective)
-
-
 class Objective(pygame.sprite.Sprite):
     def __init__(self, hand, points):
         '''hand = None if not in a hand'''
@@ -90,6 +54,44 @@ class Objective(pygame.sprite.Sprite):
         pass
 
 
+class Hand(pygame.sprite.Sprite):
+    def __init__(self, game):
+        super().__init__()
+
+        self.game = game
+        self.objectives = []
+        self.surface = None
+
+    def draw(self, surface):
+        if len(self.objectives) > 0:
+            width = len(self.objectives) * c.objective_width + \
+                (len(self.objectives) - 1) * c.objective_spacing
+            rect = pygame.rect.Rect(
+                (c.width - width) / 2, c.objective_y, width, c.objective_height)
+
+            for index, i in enumerate(self.objectives):
+                if i is not None:
+                    i.draw(surface, (rect.x + index *
+                           (c.objective_width + c.objective_spacing), rect.y))
+
+    def add_objective(self, objective: Objective):
+        if len(self.objectives) < 5:
+            self.objectives.append(objective)
+            objective.assign_hand(self)
+            return True
+        else:
+            return False
+
+    def full(self):
+        if len(self.objectives) < 5:
+            return False
+        return True
+
+    def remove_objective(self, objective):
+        self.objectives.remove(objective)
+        self.game.current_player.complete_objective(objective)
+
+
 class Panda(Objective):
     def __init__(self, points, bamboo, hand):
         self.bamboo = bamboo
@@ -135,7 +137,7 @@ class Gardener(Objective):
     def update_surface(self):
         self.create_surface()
 
-        board = Board(30, (c.objective_width / 2, c.objective_height / 2))
+        board = Board(25, (c.objective_width / 2, c.objective_height / 2))
         for index, i in enumerate(self.bamboo):
             # this governs how the plots are layed out - ie the first tile will be in 0, 0 etc.
             if index == 0:

@@ -100,3 +100,6 @@ image_river = 'images/river.png'
 objective_image = 'images/objective.png'
 objectives_images = {'panda': 'images/objectives/panda.png',
                      'gardener': 'images/objectives/gardener.png', 'plots': 'images/objectives/plots.png'}
+
+help_colour = colours.RED3
+max_rivers = 20

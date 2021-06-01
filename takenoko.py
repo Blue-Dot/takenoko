@@ -1,5 +1,5 @@
-import pygame
 import json
+import pygame
 
 # My imports
 import config as c
@@ -59,6 +59,7 @@ class Game:
         # -- GAME OBJECTS --
 
         self.player_label = None
+        self.help_text = None
         self.player_info = []
 
         self.quit_button = None
@@ -68,7 +69,7 @@ class Game:
         self.pile_tiles = None
         self.pile_objectives = {}
         self.pile_improvements = {}
-        self.pile_rivers = 20  # Remember that there are a finite number of rivers
+        self.pile_rivers = c.max_rivers  # Remember that there are a finite number of rivers
         # The top cards if the user is given a choice (ie to be put at the bottom of the pile)
         self.top_cards = []
         self.to_place = None  # A card for the user to place
@@ -84,6 +85,7 @@ class Game:
         self.gardener = None
 
         self.create_game_objects()
+        self.deal_objectives()
 
     # -- PYGAME HANDLING --
 
@@ -120,6 +122,9 @@ class Game:
             if event.type == pygame.QUIT:
                 self.is_game_running = False
 
+    def update_help(self, text):
+        self.help_text.new_text(text)
+
     # -- OBJECT CREATION --
 
     def create_game_objects(self):
@@ -140,6 +145,14 @@ class Game:
             c.font_size,
         )  # Create text at top of screen saying 'player 1'
         self.player_label.add(self.objects)
+
+        self.help_text = TextObject(
+            'Choose an action',
+            c.help_colour,
+            125,
+            (c.top_bar_height - c.font_size) / 2,
+            c.font_size)
+        self.help_text.add(self.objects)
 
     def create_buttons(self):
         self.quit_button = Button('quit', c.width - 55, 5, 50, 30, self.b_quit)
@@ -301,6 +314,11 @@ class Game:
 
     # -- GAME RULES --
 
+    def deal_objectives(self):
+        for player in self.players:
+            for objective in self.pile_objectives:
+                player.add_objective(self.pile_objectives[objective].take())
+
     def next_turn(self):
         # Increase current_player_number by 1, but cycle it through the total number of players
         self.current_player.finish_turn()
@@ -315,7 +333,7 @@ class Game:
 
         self.current_player.start_turn()
 
-        self.turn_list = ['end turn', 'choose actions']
+        self.turn_list = ['nothing', 'choose actions']
 
         if self.turns // len(self.players) >= 1:
             print(self.turns // len(self.players))
@@ -343,14 +361,32 @@ class Game:
         self.menu = None  # garbage collector should clean this up and delete the object
 
     def create_action_menu(self):
-        options = [MenuItem(pygame.image.load(c.image_tiles[0]).convert_alpha()),
+        '''options = [MenuItem(pygame.image.load(c.image_tiles[0]).convert_alpha()),
                    MenuItem(pygame.image.load(
                        c.image_river).convert_alpha()),
                    MenuItem(pygame.image.load(
                        c.gardener_image).convert_alpha()),
                    MenuItem(pygame.image.load(
                        c.panda_image).convert_alpha()),
-                   MenuItem(pygame.image.load(c.objective_image))]
+                   MenuItem(pygame.image.load(c.objective_image))]'''
+
+        options = []
+
+        if not self.pile_tiles.empty():
+            options.append(MenuItem(pygame.image.load(
+                c.image_tiles[0]).convert_alpha()))  # place plots
+
+        if self.pile_rivers > 0:
+            options.append(MenuItem(pygame.image.load(
+                       c.image_river).convert_alpha())) # add river
+
+        options += [MenuItem(pygame.image.load(
+                       c.gardener_image).convert_alpha()),
+                   MenuItem(pygame.image.load(
+                       c.panda_image).convert_alpha())] # move gardener / move panda
+
+        if not self.current_player.hand.full():
+            options.append(MenuItem(pygame.image.load(c.objective_image)))
 
         if self.weather != 2:
             self.menu = ChooseMenu(options, 'Choose %i actions' % (
@@ -436,6 +472,7 @@ class Game:
 
     def run(self):
         # For testing purposes (a sample map):
+        '''
         self.board.place(Plot(1, 1, 'green', self.board, 'panda'))
         self.board.place(Plot(0, 1, 'green', self.board))
         self.board.place(Plot(-1, 1, 'green', self.board))
@@ -443,6 +480,7 @@ class Game:
         self.board.place(Plot(-1, 0, 'yellow', self.board))
         self.board.place(Plot(1, 0, 'pink', self.board, 'irrigation'))
         self.board.place(Plot(1, -1, 'pink', self.board))
+        '''
 
         # self.players[0].hand.add_objective(Objective(self.players[0].hand))
         # self.players[0].hand.add_objective(Objective(self.players[0].hand))
@@ -543,6 +581,8 @@ class Game:
 
                 elif self.turn_list[-1] == 'action choice menu':
 
+                    self.update_help('Choose your actions')
+
                     if self.menu:
                         update = self.menu.update()
                         if update:
@@ -601,20 +641,24 @@ class Game:
                     self.menu.add(self.objects)
 
                 elif self.turn_list[-1] == 'add objective':
-                    option_images = []
-                    self.objective_link = {}
+                    if not self.current_player.hand.full():
+                        option_images = []
+                        self.objective_link = {}
 
-                    for i in self.pile_objectives:
-                        if self.pile_objectives[i].len() > 0:
-                            option_images.append(
-                                MenuItem(pygame.image.load(c.objectives_images[i])))
-                            self.objective_link[len(option_images) - 1] = i
+                        for i in self.pile_objectives:
+                            if self.pile_objectives[i].len() > 0:
+                                option_images.append(
+                                    MenuItem(pygame.image.load(c.objectives_images[i])))
+                                self.objective_link[len(option_images) - 1] = i
 
-                    self.menu = ChooseMenu(option_images, 'Choose 1 objective')
-                    self.menu.add(self.objects)
+                        self.menu = ChooseMenu(option_images, 'Choose 1 objective')
+                        self.menu.add(self.objects)
 
-                    del self.turn_list[-1]
-                    self.turn_list.append('objective choice menu')
+                        del self.turn_list[-1]
+                        self.turn_list.append('objective choice menu')
+                    else:
+                        print("sorry your hand is full :(")
+                        del self.turn_list[-1]
 
                 elif self.turn_list[-1] == 'choose plot menu':
                     update = self.menu.update()
@@ -643,7 +687,7 @@ class Game:
                         # add objective using self.objective_link to player hand:
                         objective = self.pile_objectives[self.objective_link[update[0]]].take(
                         )
-                        objective.assign_hand(self.current_player.hand)
+                        # objective.assign_hand(self.current_player.hand)
                         self.current_player.add_objective(objective)
                         self.button_system.enable()
 
@@ -674,6 +718,11 @@ class Game:
                         else:
                             print(
                                 'please choose a new tile - this one allready has an improvement')
+
+                elif self.turn_list[-1] == 'nothing':
+                    # waiting for the user to do something
+                    self.update_help(
+                        'Use the buttons on the left to do an action')
 
             '''
             if self.game_state == 'grow':

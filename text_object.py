@@ -8,13 +8,15 @@ class TextObject(pygame.sprite.Sprite):
         self.text = text
         self.colour = colour
         self.font = pygame.font.SysFont(c.font_name, size)
-        
+
         self.image = self.font.render(self.text, True, self.colour)
-        self.rect = pygame.rect.Rect((x, y), (self.image.get_height(), self.image.get_width()))
+        self.rect = pygame.rect.Rect(
+            (x, y), (self.image.get_height(), self.image.get_width()))
 
     def draw(self, surface):
         surface.blit(self.image, self.rect.topleft)
 
     def new_text(self, text):
-        self.text = text
-        self.image = self.font.render(self.text, True, self.colour)
+        if self.text != text:
+            self.text = text
+            self.image = self.font.render(self.text, True, self.colour)
