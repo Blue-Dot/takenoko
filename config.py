@@ -71,8 +71,8 @@ gardener_height = panda_height
 river_width = 7
 river_colour = colours.DODGERBLUE1
 
-objective_width = 100
-objective_height = 150
+objective_width = 110
+objective_height = 190
 objective_spacing = 20
 objective_y = height - objective_height - objective_spacing
 objective_colour = colours.CADETBLUE4

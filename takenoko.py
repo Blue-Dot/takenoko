@@ -149,7 +149,7 @@ class Game:
         self.player_label.add(self.objects)
 
         self.help_text = TextObject(
-            'Choose an action',
+            'Press \'start turn\' to play',
             c.help_colour,
             125,
             (c.top_bar_height - c.font_size) / 2,
@@ -325,6 +325,8 @@ class Game:
 
     def next_turn(self):
         # Increase current_player_number by 1, but cycle it through the total number of players
+        self.update_help('')
+        
         self.current_player.finish_turn()
 
         self.current_player_number = (self.current_player_number + 1) % (
@@ -375,28 +377,33 @@ class Game:
                    MenuItem(pygame.image.load(c.objective_image))]'''
 
         options = []
+        toggle_text = []
 
         if not self.pile_tiles.empty():
             options.append(MenuItem(pygame.image.load(
                 c.image_tiles[0]).convert_alpha()))  # place plots
+            toggle_text.append('add plot')
 
         if self.pile_rivers > 0:
             options.append(MenuItem(pygame.image.load(
                 c.image_river).convert_alpha()))  # add river
+            toggle_text.append('add river')
 
         options += [MenuItem(pygame.image.load(
             c.gardener_image).convert_alpha()),
             MenuItem(pygame.image.load(
                 c.panda_image).convert_alpha())]  # move gardener / move panda
+        toggle_text += ['panda', 'gardener']
 
         if not self.current_player.hand.full():
             options.append(MenuItem(pygame.image.load(c.objective_image)))
+            toggle_text += ['objective']
 
         if self.weather != 2:
             self.menu = ChooseMenu(options, 'Choose %i actions' % (
-                3 if self.weather == 0 else 2), self, 3 if self.weather == 0 else 2)
+                3 if self.weather == 0 else 2), self, 3 if self.weather == 0 else 2, toggle_text)
         else:
-            self.menu = ChooseMenu(options, 'Choose 1 action', self)
+            self.menu = ChooseMenu(options, 'Choose 1 action', self, 1, toggle_text)
         self.menu.add(self.objects)
 
     def create_action_button(self, name):
@@ -562,12 +569,12 @@ class Game:
                             MenuItem(pygame.image.load(
                                 c.weather_images[3]).convert_alpha()),
                             MenuItem(pygame.image.load(c.weather_images[4]).convert_alpha())],
-                            'Choose 1 weather system', self)
+                            'Choose 1 weather system', self, 1, ['Sun', 'Rain', 'Wind', 'Storm', 'Clouds'])
                         self.menu.add(self.objects)
                         self.turn_list.append('weather choice menu')
 
                 elif self.turn_list[-1] == 'roll dice':
-                    self.weather = self.roll_dice()
+                    self.weather = 5
                     del self.turn_list[-1]
 
                 elif self.turn_list[-1] == 'weather choice menu':

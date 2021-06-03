@@ -6,15 +6,20 @@ from button import Button, Toggle
 
 
 class ChooseMenu(pygame.sprite.Sprite):
-    def __init__(self, choices, text, game, number=1):
+    def __init__(self, choices, text, game, number=1, toggle_text=None):
         super().__init__()
         self.size = (len(choices)*150, c.choose_menu_height)
         self.choices = choices
         self.number = number
+        print(self.number)
 
         self.game = game
 
         self.toggles = []
+        if not toggle_text:
+            self.toggle_text = ['pick'] * len(self.choices)
+        else:
+            self.toggle_text = toggle_text
 
         self.shadow = pygame.surface.Surface(self.size)
         self.shadow.fill(c.shadow_colour)
@@ -41,11 +46,13 @@ class ChooseMenu(pygame.sprite.Sprite):
             location = (150 * index + 75, 100)
             i.draw(self.surface, location)
 
+            text = self.toggle_text[index]
+            width = len(text) * 12 if len(text) * 12 > 80 else 80
             toggle_location_x = self.rect.left + \
-                index * 150 + (150 - c.toggle_width) // 2
+                index * 150 + (150 - width) // 2
             toggle_location_y = self.rect.top + 150
             self.toggles.append(
-                Toggle(toggle_location_x, toggle_location_y, c.toggle_width, 30))
+                Toggle(toggle_location_x, toggle_location_y, width, 30, text))
 
     def draw(self, surface):
         surface.blit(

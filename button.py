@@ -60,8 +60,8 @@ class Button(pygame.sprite.Sprite):
 
 
 class Toggle(Button):
-    def __init__(self, x, y, width, height):
-        super().__init__('pick', x, y, width, height, self.click)
+    def __init__(self, x, y, width, height, text='pick'):
+        super().__init__(text, x, y, width, height, self.click)
         self.state = False
 
     def click(self):

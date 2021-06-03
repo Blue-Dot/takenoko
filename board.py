@@ -163,7 +163,7 @@ class MainBoard(Board):  # THE MAIN BOARD WHICH IS FOR EVERYTHING
                             return i
         return False
 
-    def search_plots(self, needle) -> bool:  # thank you freddie
+    def search_plots(self, needle) -> bool:  # thank you freddie for showing me the return types
         ''' needle in form of [[[0, 0], "green"], [[0, 1], "pink"], [[1, 0], "pink"]] - must be two or more plots '''
 
         # create vector pathway
@@ -218,7 +218,7 @@ class VectorPath():
     def __init__(self):
         self.path = []
 
-    def add_vector(self, tile: [[int, int], str]):
+    def add_vector(self, tile):
         coord_q = tile[0][0]
         coord_r = tile[0][1]
         colour = tile[1]
@@ -233,7 +233,7 @@ class VectorPath():
                  'colour': colour}
             )
 
-    def rotate(self):  # INCOMPLETE
+    def rotate(self):  
         for i in self.path:
             i['coords'] = i['coords'].rotate(self.path[0]['coords'])
 
