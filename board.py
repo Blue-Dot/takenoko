@@ -163,12 +163,14 @@ class MainBoard(Board):  # THE MAIN BOARD WHICH IS FOR EVERYTHING
                             return i
         return False
 
-    def search_plots(self, needle) -> bool:  # thank you freddie for showing me the return types
+    # thank you freddie for showing me the return types
+    def search_plots(self, needle) -> bool:
         ''' needle in form of [[[0, 0], "green"], [[0, 1], "pink"], [[1, 0], "pink"]] - must be two or more plots '''
 
         # create vector pathway
         path = VectorPath()
         for i in needle:
+            #print(i[0][0], i[0][1])
             path.add_vector(i)
 
         # create a list of all the posisble base tiles
@@ -179,8 +181,8 @@ class MainBoard(Board):  # THE MAIN BOARD WHICH IS FOR EVERYTHING
             if self.hash_table[coords].colour == base_tile_colour:
                 poss_base_tiles.append(Axial(coords[0], coords[1]))
 
-        # for i in path.path:
-        #    print(i['coords'].get_coords())
+        #for i in path.path:
+        #    print(i['vector'].get_coords())
 
         # for correct colour tile in hash table:
         for poss_base_tile in poss_base_tiles:
@@ -191,11 +193,11 @@ class MainBoard(Board):  # THE MAIN BOARD WHICH IS FOR EVERYTHING
                     return True
         return False
 
-    def test_path(self, path, start):  # INCOMPLETE
+    def test_path(self, path, start):
         pointer_location = start
 
         for i in path.path:
-            pointer_location = pointer_location.sum(i['coords'])
+            pointer_location = pointer_location.sum(i['vector'])
 
             # print(pointer_location.get_coords())
 
@@ -225,17 +227,18 @@ class VectorPath():
 
         if not self.path:  # If list is empty
             self.path.append(
-                {'coords': Axial(coord_q, coord_r), 'colour': colour}
+                {'vector': Axial(coord_q, coord_r), 'colour': colour,
+                 'coords': Axial(coord_q, coord_r)}
             )
         else:
             self.path.append(
-                {'coords': Axial(coord_q, coord_r).subtract(self.path[-1]['coords']),
-                 'colour': colour}
+                {'vector': Axial(coord_q, coord_r).subtract(self.path[-1]['coords']),
+                 'colour': colour, 'coords': Axial(coord_q, coord_r)}
             )
 
-    def rotate(self):  
+    def rotate(self):
         for i in self.path:
-            i['coords'] = i['coords'].rotate(self.path[0]['coords'])
+            i['vector'] = i['vector'].rotate(self.path[0]['vector'])
 
     def base_tile(self):
         '''returns the colour of the [0, 0] tile'''

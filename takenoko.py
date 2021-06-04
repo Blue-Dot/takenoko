@@ -76,6 +76,7 @@ class Game:
 
         self.improvement_link = {}
         self.objective_link = {}
+        self.action_link = []
 
         self.menu = None
         self.dice = None
@@ -163,58 +164,6 @@ class Game:
         self.button_system.add_button(
             Button('Start turn', 0, 0, 130, 30, self.next_turn))
 
-        '''
-        self.add_objective_button = Button(
-            'add objective', 20, 65, 150, 30, self.b_add_objective
-        )
-        self.add_objective_button.add(self.objects)
-
-        self.grow_button = Button('grow', 20, 65 + 50, 50, 30, self.b_grow)
-        self.grow_button.add(self.objects)
-
-        self.next_turn_button = Button(
-            'next turn', 20, 165, 90, 30, self.next_turn)
-        self.next_turn_button.add(self.objects)
-
-        self.panda_move_button = Button(
-            'move panda', 20, 165 + 50, 120, 30, self.b_panda_move
-        )
-        self.panda_move_button.add(self.objects)
-
-        self.gardener_move_button = Button(
-            'move gardener', 20, 265, 150, 30, self.b_gardener_move
-        )
-        self.gardener_move_button.add(self.objects)
-
-        self.place_river_button = Button(
-            'place rivers', 20, 265 + 50, 130, 30, self.b_place_river
-        )
-        self.place_river_button.add(self.objects)
-
-        self.place_tile_button = Button(
-            'place tile', 20, 365, 110, 30, self.b_place_tile
-        )
-        self.place_tile_button.add(self.objects)
-
-        self.check_bamboo_button = Button(
-            'check bamboo', 20, 365 + 50, 150, 30, self.b_check_bamboo
-        )
-        self.check_bamboo_button.add(self.objects)
-
-        self.roll_dice_button = Button(
-            'roll die', 20, 465, 80, 30, self.roll_dice)
-        self.roll_dice_button.add(self.objects)
-
-        self.open_menu_button = Button(
-            'open menu', 20, 465 + 50, 110, 30, self.b_open_menu)
-        self.open_menu_button.add(self.objects)
-
-        self.add_river_button = Button(
-            'add river', 20, 565, 120, 30, self.b_add_river)
-        self.add_river_button.add(self.objects)
-
-        '''
-
     def create_button_system(self):
         self.button_system = ButtonSystem(20, 65)
         self.button_system.add(self.objects)
@@ -256,7 +205,7 @@ class Game:
     def create_player_info(self):
         for index, i in enumerate(self.players):
             self.player_info.append(PlayerInfo(
-                i, c.width - c.player_info_width - 20, (index * (c.player_info_height + 20)) + 150))
+                i, c.width - c.player_info_width - 20, (index * (c.player_info_height + 20)) + 150, str(index + 1)))
             self.player_info[-1].add(self.objects)
 
     # -- BUTTON PRESSED --
@@ -264,49 +213,8 @@ class Game:
     def b_quit(self):
         self.is_game_running = False
 
-    '''
-    def b_add_objective(self):
-        self.game_state = 'add objective'
-
-    def b_grow(self):
-        self.game_state = 'grow'
-
-    def b_panda_move(self):
-        self.game_state = 'move panda'
-
-    def b_gardener_move(self):
-        self.game_state = 'move gardener'
-
-    def b_place_river(self):
-        self.game_state = 'place river'
-
-    def b_place_tile(self):
-        if self.game_state != 'place tile':
-            if not self.pile_tiles.empty():
-                self.top_tile = self.pile_tiles.take()
-                self.game_state = 'place tile'
-            else:
-                print('no more tiles lol')
-        else:
-            print('you have to place a tile now')
-
-    def b_check_bamboo(self):
-        self.game_state = 'check bamboo'
-    '''
-
     def roll_dice(self):
         return self.dice.roll()
-
-    '''
-    def b_open_menu(self):
-        self.menu = ChooseMenu([MenuItem(pygame.image.load(c.image_tiles[0])), MenuItem(
-            pygame.image.load(c.image_tiles[0])), MenuItem(pygame.image.load(c.image_tiles[1]))], 'choose plot', number=2)
-        self.menu.add(self.objects)
-        self.game_state = 'choose menu'
-
-    def b_add_river(self):
-        self.current_player.river_reserve += 1
-    '''
 
     # -- GAME RULES --
 
@@ -326,7 +234,7 @@ class Game:
     def next_turn(self):
         # Increase current_player_number by 1, but cycle it through the total number of players
         self.update_help('')
-        
+
         self.current_player.finish_turn()
 
         self.current_player_number = (self.current_player_number + 1) % (
@@ -344,7 +252,7 @@ class Game:
         if self.turns // len(self.players) >= 1:
             self.turn_list += ['weather', 'roll dice']
 
-        #if self.button_system:  # self.button_system does not exist before the first turn
+        # if self.button_system:  # self.button_system does not exist before the first turn
         self.button_system.remove(self.objects)
 
         self.turns += 1
@@ -378,32 +286,38 @@ class Game:
 
         options = []
         toggle_text = []
+        self.action_link = []
 
         if not self.pile_tiles.empty():
             options.append(MenuItem(pygame.image.load(
                 c.image_tiles[0]).convert_alpha()))  # place plots
             toggle_text.append('add plot')
+            self.action_link.append(0)
 
         if self.pile_rivers > 0:
             options.append(MenuItem(pygame.image.load(
                 c.image_river).convert_alpha()))  # add river
             toggle_text.append('add river')
+            self.action_link.append(1)
 
         options += [MenuItem(pygame.image.load(
             c.gardener_image).convert_alpha()),
             MenuItem(pygame.image.load(
                 c.panda_image).convert_alpha())]  # move gardener / move panda
-        toggle_text += ['panda', 'gardener']
+        toggle_text += ['gardener', 'panda']
+        self.action_link += [2, 3]
 
         if not self.current_player.hand.full():
             options.append(MenuItem(pygame.image.load(c.objective_image)))
             toggle_text += ['objective']
+            self.action_link.append(4)
 
         if self.weather != 2:
             self.menu = ChooseMenu(options, 'Choose %i actions' % (
                 3 if self.weather == 0 else 2), self, 3 if self.weather == 0 else 2, toggle_text)
         else:
-            self.menu = ChooseMenu(options, 'Choose 1 action', self, 1, toggle_text)
+            self.menu = ChooseMenu(
+                options, 'Choose 1 action', self, 1, toggle_text)
         self.menu.add(self.objects)
 
     def create_action_button(self, name):
@@ -574,7 +488,7 @@ class Game:
                         self.turn_list.append('weather choice menu')
 
                 elif self.turn_list[-1] == 'roll dice':
-                    self.weather = 5
+                    self.weather = self.roll_dice()
                     del self.turn_list[-1]
 
                 elif self.turn_list[-1] == 'weather choice menu':
@@ -616,7 +530,7 @@ class Game:
                             actions = {0: 'add plot', 1: 'add river', 2: 'move gardener',
                                        3: 'move panda', 4: 'add objective'}
                             for i in update:
-                                self.create_action_button(actions[i])
+                                self.create_action_button(actions[self.action_link[i]])
                     else:  # second iteration of this, when wind was the weather
                         self.create_action_menu()
 
@@ -738,7 +652,7 @@ class Game:
 
                     update = self.board.select_tile()
                     if update:
-                        if not update.has_improvement():
+                        if not update.has_improvement() and update.bamboo_amount == 0:
                             update.add_improvement(
                                 c.improvements[self.to_place])
                             del self.turn_list[-1]
@@ -755,71 +669,6 @@ class Game:
             else:
                 # Game has ended
                 pass
-
-            '''
-            if self.game_state == 'grow':
-                selected_tile = self.board.select_tile()
-                if selected_tile:
-                    selected_tile.add_bamboo(2)
-            elif self.game_state == 'add objective':
-
-                # If the pile is not empty
-                if not self.pile_objectives['plots'].empty():
-                    if self.current_player.hand.full() is False:
-                        objective = self.pile_objectives['plots'].take()
-                        objective.assign_hand(self.current_player.hand)
-                        self.current_player.hand.add_objective(objective)
-                    else:
-                        print('your hand is full')
-                else:
-                    print('no more objectives')
-
-                self.game_state = ''
-
-            elif self.game_state == 'move panda':
-                selected_tile = self.board.select_tile()
-                if selected_tile:
-                    if self.panda.move(selected_tile):  # If it was a valid move
-                        bamboo = selected_tile.eat()
-                        if bamboo is not False:
-                            self.current_player.add_bamboo(bamboo)
-                        # Reset game state (panda has moved)
-                        self.game_state = ''
-            elif self.game_state == 'move gardener':
-                selected_tile = self.board.select_tile()
-                if selected_tile:
-                    if self.gardener.move(selected_tile):  # If it was a valid move
-                        selected_tile.grow(self.board)
-                        # Reset game state (gardener has moved)
-                        self.game_state = ''
-            elif self.game_state == 'place river':
-                self.board.river_system.place_river()
-            elif self.game_state == 'place tile':
-                placed_tile = self.board.place_tile(self.top_tile)
-                if placed_tile:
-                    self.game_state = ''
-            elif self.game_state == 'check bamboo':
-                colour = input('colour:')
-                length = int(input('length:'))
-                improvement = input('improvement:')
-                if improvement == 'null':
-                    improvement = None
-
-                print(self.board.search_bamboo(colour, length, improvement))
-                self.game_state = ''
-            elif self.game_state == 'throwing dice':
-                roll = self.dice.roll()
-                if roll:
-                    self.game_state = ''
-            elif self.game_state == 'choose menu':
-                update = self.menu.update()
-                if update:
-                    print(update)
-                    self.game_state = ''
-                    self.menu.remove(self.objects)
-                    self.menu = None  # garbage collector should clean this up and delete the object
-
-            '''
 
             self.draw()
 

@@ -18,6 +18,10 @@ class Image:
 
 
 class Manager:
+    # This is a modified version of the solution provided here https://stackoverflow.com/questions/58540537/how-to-fade-the-screen-out-and-back-in-using-pygame
+    # I used the same 'fading' variable to determine which way the images were fading
+    # and the same semi transparent 'veil' to do fading
+
     def __init__(self, images):
         self.images = images
         self.image = images[0]
@@ -63,7 +67,7 @@ loop = True
 leave = False
 
 pictures = []
-for i in range(1, 7):
+for i in range(1, 12):
     pictures.append(Image('images/comics/' + str(i) + '.png'))
 
 manager = Manager(pictures)
@@ -78,8 +82,11 @@ while loop and not leave:
         if e.type == pygame.QUIT:
             leave = True
         if e.type == pygame.KEYDOWN:
-            if not manager.next():
+            if e.key == pygame.K_s:
                 loop = False
+            elif not manager.next():
+                loop = False
+        
 
     manager.draw(main_surface)
 
@@ -91,4 +98,3 @@ pygame.quit()
 if not leave:
     Main_Game = Game(c.width, c.height)
     Main_Game.run()
-

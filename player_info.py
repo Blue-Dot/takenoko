@@ -6,11 +6,12 @@ from collections import Counter
 
 
 class PlayerInfo(pygame.sprite.Sprite):
-    def __init__(self, player, x, y):
+    def __init__(self, player, x, y, num):
         super().__init__()
 
         self.player = player
         self.coords = (x, y)
+        self.num = num
 
         self.objects = pygame.sprite.Group()
 
@@ -23,16 +24,18 @@ class PlayerInfo(pygame.sprite.Sprite):
         self.surface.fill(c.objective_colour)
 
     def create_objects(self):
-        self.rivers_object = TextObject('', colours.WHITE, 10, 10, 20)
+        self.rivers_object = TextObject('', colours.WHITE, 115, 10, 20)
         self.points_object = TextObject(
-            '', colours.WHITE, c.player_info_width // 2, 10, 20)
+            '', colours.WHITE, 235, 10, 20)
         self.bamboo_label = TextObject('Bamboo:', colours.WHITE, 10, 50, 20)
         self.bamboo_object = TextObject('', colours.WHITE, 10, 80, 20)
         self.improvements_label = TextObject(
             'Improvements:', colours.WHITE, 10, 120, 20)
         self.improvements_object = TextObject('', colours.WHITE, 10, 150, 20)
+        self.name_object = TextObject(
+            'Player ' + self.num, colours.WHITE, 10, 10, 20)
         self.objects.add((self.rivers_object, self.points_object,
-                         self.bamboo_label, self.improvements_label, self.bamboo_object, self.improvements_object))
+                         self.bamboo_label, self.improvements_label, self.bamboo_object, self.improvements_object, self.name_object))
 
         self.update()
 

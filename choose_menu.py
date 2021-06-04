@@ -11,7 +11,6 @@ class ChooseMenu(pygame.sprite.Sprite):
         self.size = (len(choices)*150, c.choose_menu_height)
         self.choices = choices
         self.number = number
-        print(self.number)
 
         self.game = game
 

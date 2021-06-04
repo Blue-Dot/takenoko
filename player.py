@@ -38,7 +38,6 @@ class Player:
         for i in bamboo:
             if i in reserve:
                 reserve.remove(i)
-                return True
             else:
                 return False
 

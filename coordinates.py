@@ -119,11 +119,10 @@ class Cubic:
 
 # TESTING:
 '''
-a = Axial(0, 0)
-c = Axial(1, 1)
-b = a.sum(c)
-print(c.q, c.r, c.s)
-print(b.q, b.r, b.s)
+a = Axial(2, 3)
+b = Axial(-2, -3)
+c = a.sum(b)
+print(c.q, c.r)
 
 #axial.sum(a) works :)
 
@@ -139,21 +138,13 @@ print(d.coords())
 a = Axial(1, 0)
 b = Axial(2, 0)
 c = a.subtract(b)
-print(c.q)
-print(c.r)
+d = b.subtract(a)
+print(c.q, c.r)
+print(d.q, d.r)
 
 #rotation test
 a = Axial(1, 2)
-a = a.rotate(Axial(0, 0))
-print(a.q, a.r)
-a = a.rotate(Axial(0, 0))
-print(a.q, a.r)
-a = a.rotate(Axial(0, 0))
-print(a.q, a.r)
-a = a.rotate(Axial(0, 0))
-print(a.q, a.r)
-a = a.rotate(Axial(0, 0))
-print(a.q, a.r)
-a = a.rotate(Axial(0, 0))
-print(a.q, a.r)
+for i in range(6):
+    a = a.rotate(Axial(0, 0))
+    print(a.q, a.r)
 '''
