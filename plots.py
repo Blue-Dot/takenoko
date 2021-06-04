@@ -197,6 +197,7 @@ class Plot(Tile):
 class Pond(Tile):
     def __init__(self, q, r, board):
         super().__init__(q, r, 'blue', board)
+        self.has_improvement = False
 
     def grow(self, *args):
         pass
@@ -208,6 +209,9 @@ class Pond(Tile):
         pass
 
     def add_bamboo(self, *args):
+        pass
+
+    def add_improvement(self, *args):
         pass
 
 

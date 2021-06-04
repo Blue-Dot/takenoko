@@ -108,6 +108,7 @@ river_warning = "You don't have any rivers"
 improvement_warning = "You don't have any improvements"
 river_reserve_warning = "There aren't any rivers left"
 objective_incomplete = "This objective hasn't been completed yet"
+trigger_finish = "Last turn!"
 # Warnings which shouldn't be cleared while waiting:
 waiting_warnings = [river_warning, improvement_warning,
-                    river_reserve_warning, objective_incomplete]
+                    river_reserve_warning, objective_incomplete, trigger_finish]

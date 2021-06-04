@@ -66,6 +66,8 @@ class Game:
         # The buttons on the left hand side of the screen (to choose items)
         self.button_system = None
 
+        self.emporer_card = 1
+
         self.pile_tiles = None
         self.pile_objectives = {}
         self.pile_improvements = {}
@@ -378,9 +380,11 @@ class Game:
 
     def trigger_finish(self):
         '''player has copmleted enough objectives - can finish now'''
-        self.finish = self.turns
-        self.current_player.emporer_card()
-        self.update_help('last turn')
+        if self.emporer_card == 1:
+            self.finish = self.turns
+            self.current_player.emporer_card()
+            self.emporer_card -= 1
+            self.update_help(c.trigger_finish)
 
     def end_game(self):
         ''''''
@@ -488,7 +492,7 @@ class Game:
                         self.turn_list.append('weather choice menu')
 
                 elif self.turn_list[-1] == 'roll dice':
-                    self.weather = self.roll_dice()
+                    self.weather = 5
                     del self.turn_list[-1]
 
                 elif self.turn_list[-1] == 'weather choice menu':
@@ -530,7 +534,8 @@ class Game:
                             actions = {0: 'add plot', 1: 'add river', 2: 'move gardener',
                                        3: 'move panda', 4: 'add objective'}
                             for i in update:
-                                self.create_action_button(actions[self.action_link[i]])
+                                self.create_action_button(
+                                    actions[self.action_link[i]])
                     else:  # second iteration of this, when wind was the weather
                         self.create_action_menu()
 
@@ -545,6 +550,7 @@ class Game:
                 elif self.turn_list[-1] == 'add river':
                     if self.pile_rivers > 0:
                         self.current_player.river_reserve += 1
+                        self.pile_rivers -= 1
                     else:
                         self.update_help(c.river_reserve_warning)
 
@@ -652,11 +658,15 @@ class Game:
 
                     update = self.board.select_tile()
                     if update:
-                        if not update.has_improvement() and update.bamboo_amount == 0:
-                            update.add_improvement(
-                                c.improvements[self.to_place])
-                            del self.turn_list[-1]
-                            self.button_system.enable()
+                        if not update.has_improvement():
+                            if update.bamboo_amount == 0:
+                                update.add_improvement(
+                                    c.improvements[self.to_place])
+                                del self.turn_list[-1]
+                                self.button_system.enable()
+                            else:
+                                self.update_help(
+                                    'please choose a different tile - this tile has bamboo')
                         else:
                             self.update_help(
                                 'please choose a new tile - this one allready has an improvement')
